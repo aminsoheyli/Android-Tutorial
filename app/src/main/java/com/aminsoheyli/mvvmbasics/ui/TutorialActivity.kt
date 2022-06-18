@@ -19,13 +19,14 @@ class TutorialActivity : AppCompatActivity() {
             val showLayoutView = layoutInflater.inflate(R.layout.show_layout, null)
             val editText = showLayoutView.findViewById<EditText>(R.id.editTextTextPersonName)
             editText.setText("Welcome")
-            val toast = Toast.makeText(applicationContext, "Toast: Well done!", Toast.LENGTH_LONG)
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-            toast.show()
 
-            Snackbar.make(it, "Snackbar: Well done!", Snackbar.LENGTH_LONG)
+            Snackbar.make(it, "Snackbar", Snackbar.LENGTH_LONG)
                 .setAction("Close Activity") {
                     finish()
+                    val toast =
+                        Toast.makeText(applicationContext, "Toast - Well done!", Toast.LENGTH_LONG)
+                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+                    toast.show()
                 }.show()
         }
     }
