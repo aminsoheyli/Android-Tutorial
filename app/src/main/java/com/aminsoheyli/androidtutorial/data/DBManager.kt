@@ -15,13 +15,14 @@ class DBManager(context: Context) {
     companion object {
         const val DB_NAME = "Students"
         const val TABLE_NAME = "Logins"
+        const val COLUMN_ID = "id"
         const val COLUMN_USERNAME = "username"
         const val COLUMN_PASSWORD = "password"
         const val DB_VERSION = 1
 
         // CREATE TABLE IF NOT EXIST Logins (id	INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password	TEXT);
         const val CREATE_TABLE =
-            "CREATE TABLE IF NOT EXISTS $TABLE_NAME(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "CREATE TABLE IF NOT EXISTS $TABLE_NAME($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     " $COLUMN_USERNAME TEXT," +
                     "$COLUMN_PASSWORD TEXT);"
 
@@ -60,6 +61,10 @@ class DBManager(context: Context) {
 
     fun delete(whereClause: String, whereArgs: Array<String>?): Int {
         return sqlDB.delete(TABLE_NAME, whereClause, whereArgs)
+    }
+
+    fun update(values: ContentValues, selection: String?, selectionArgs: Array<String>?): Int {
+        return sqlDB.update(TABLE_NAME, values, selection, selectionArgs)
     }
 
 }

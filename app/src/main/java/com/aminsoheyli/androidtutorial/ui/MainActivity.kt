@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity(), ItemChangedInterface {
     private lateinit var dbManager: DBManager
     private lateinit var recyclerView: RecyclerView
     private var usersInfo = arrayListOf<UserInfo>()
+    private var isUpdating = false
+    private lateinit var currentUserInfo: UserInfo
+    private var currentUserPosition: Int = -1
     private var userPassAdapter = UserPassAdapter(usersInfo, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,6 +116,21 @@ class MainActivity : AppCompatActivity(), ItemChangedInterface {
             }
         }
 
+        findViewById<Button>(R.id.button_update).setOnClickListener {
+            if (isUpdating) {
+                val values = ContentValues()
+                values.put(DBManager.COLUMN_ID, currentUserInfo.id)
+                values.put(DBManager.COLUMN_USERNAME, editTextUsername.text.toString())
+                values.put(DBManager.COLUMN_PASSWORD, editTextPassword.text.toString())
+                val selectionArgs = arrayOf(currentUserInfo.id.toString())
+                dbManager.update(values, "id=?", selectionArgs)
+                (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
+                editTextPassword.setText("")
+                editTextUsername.setText("")
+                editTextUsername.clearFocus()
+                isUpdating = false
+            }
+        }
 
         buttonLoad.setOnClickListener {
             val projection = { "username, password" }
@@ -162,9 +180,18 @@ class MainActivity : AppCompatActivity(), ItemChangedInterface {
 //        (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged() // or itemChanged
     }
 
+    override fun onItemUpdate(userInfo: UserInfo, position: Int) {
+        isUpdating = true
+        editTextUsername.setText(userInfo.username)
+        editTextPassword.setText(userInfo.password)
+        currentUserInfo = userInfo
+        currentUserPosition = position
+    }
+
 
 }
 
 interface ItemChangedInterface {
     fun onItemDeleted(id: Int)
+    fun onItemUpdate(userInfo: UserInfo, position: Int)
 }
