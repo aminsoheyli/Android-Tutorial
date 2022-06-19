@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aminsoheyli.androidtutorial.R
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPref
     private lateinit var dbManager: DBManager
     private lateinit var recyclerView: RecyclerView
+    private var usersInfo = arrayListOf<UserInfo>()
+    private var userPassAdapter = UserPassAdapter(usersInfo)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,6 +45,12 @@ class MainActivity : AppCompatActivity() {
         editTextUsername = findViewById(R.id.editText_username)
         editTextPassword = findViewById(R.id.editTextTextPassword)
         recyclerView = findViewById(R.id.recyclerView_users)
+
+
+        recyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        userPassAdapter = UserPassAdapter(usersInfo)
+        recyclerView.adapter = userPassAdapter
 
         buttonDialog.setOnClickListener {
             val popTime = PopTime()
@@ -75,15 +85,21 @@ class MainActivity : AppCompatActivity() {
                 editTextPassword.text.toString()
             )*/
         }
+        editTextUsername.doOnTextChanged { text, start, before, count ->
+            val namePattern = text.toString()
 
-        buttonLoad.setOnClickListener {
-            val projection = { "username, password" }
-            val cursor = dbManager.query(null, null, null, null)
+            var selection: String? = null
+            var selectionArgs: Array<String>? = null
+            if (namePattern.isNotEmpty()) {
+                selection = "username like ?"
+                selectionArgs = arrayOf("%$namePattern%")
+            }
+            val cursor = dbManager.query(null, selection, selectionArgs, null)
             val idColumnIndex = cursor.getColumnIndex("id")
             val usernameColumnIndex = cursor.getColumnIndex(DBManager.COLUMN_USERNAME)
             val passwordColumnIndex = cursor.getColumnIndex(DBManager.COLUMN_PASSWORD)
             if (cursor.moveToFirst()) {
-                val usersInfo = arrayListOf<UserInfo>()
+                usersInfo.clear()
                 do {
                     usersInfo.add(
                         UserInfo(
@@ -93,11 +109,36 @@ class MainActivity : AppCompatActivity() {
                         )
                     )
                 } while (cursor.moveToNext())
-                if (usersInfo.isNotEmpty()) {
-                    recyclerView.layoutManager =
-                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                    recyclerView.adapter = UserPassAdapter(usersInfo)
-                }
+                (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
+            }
+        }
+
+
+        buttonLoad.setOnClickListener {
+            val projection = { "username, password" }
+            val namePattern = editTextUsername.text.toString()
+            var selection: String? = null
+            var selectionArgs: Array<String>? = null
+            if (namePattern.isNotEmpty()) {
+                selection = "username like ?"
+                selectionArgs = arrayOf("%$namePattern%")
+            }
+            val cursor = dbManager.query(null, selection, selectionArgs, null)
+            val idColumnIndex = cursor.getColumnIndex("id")
+            val usernameColumnIndex = cursor.getColumnIndex(DBManager.COLUMN_USERNAME)
+            val passwordColumnIndex = cursor.getColumnIndex(DBManager.COLUMN_PASSWORD)
+            if (cursor.moveToFirst()) {
+                usersInfo.clear()
+                do {
+                    usersInfo.add(
+                        UserInfo(
+                            cursor.getInt(idColumnIndex),
+                            cursor.getString(usernameColumnIndex),
+                            cursor.getString(passwordColumnIndex)
+                        )
+                    )
+                } while (cursor.moveToNext())
+                (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
             }
 
             /*val data = sharedPref.loadData()
