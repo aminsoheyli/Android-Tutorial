@@ -1,5 +1,6 @@
 package com.aminsoheyli.androidtutorial.ui
 
+import android.content.ContentValues
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -18,12 +19,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editTextUsername: EditText
     private lateinit var editTextPassword: EditText
     private lateinit var sharedPref: SharedPref
-
+    private lateinit var dbManager: DBManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         sharedPref = SharedPref(this)
-        val dbManager = DBManager(this)
+        dbManager = DBManager(this)
         initUi()
     }
 
@@ -55,6 +56,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonSave.setOnClickListener {
+            val values = ContentValues()
+            values.put(DBManager.COLUMN_USERNAME, editTextUsername.text.toString())
+            values.put(DBManager.COLUMN_PASSWORD, editTextPassword.text.toString())
+            val id = dbManager.insert(values)
+            if (id > -1)
+                Utility.showSnackBar(it, "User id: $id")
+            else
+                Utility.showSnackBar(it, "Can't insert")
+
             sharedPref.saveData(
                 editTextUsername.text.toString(),
                 editTextPassword.text.toString()

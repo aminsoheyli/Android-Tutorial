@@ -1,5 +1,6 @@
 package com.aminsoheyli.androidtutorial.data
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -35,5 +36,10 @@ class DBManager(context: Context) {
             }
 
         }
+    }
+
+    fun insert(values: ContentValues): Long {
+        val id = sqlDB.insert(TABLE_NAME, "", values)
+        return id
     }
 }
