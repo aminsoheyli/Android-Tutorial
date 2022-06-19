@@ -1,6 +1,5 @@
 package com.aminsoheyli.androidtutorial
 
-import android.content.DialogInterface
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonDialog: Button
     private lateinit var buttonAlert: Button
+    private lateinit var buttonSave: Button
+    private lateinit var buttonLoad: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUi() {
         buttonDialog = findViewById(R.id.button_show_dialog)
-        buttonAlert = findViewById(R.id.buton_show_alert)
+        buttonAlert = findViewById(R.id.button_show_alert)
 
         buttonDialog.setOnClickListener {
             val popTime = PopTime()

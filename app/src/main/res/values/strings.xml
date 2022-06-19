@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">AndroidTutorial</string>
+    <string name="dialog_button_text">Dialog</string>
+    <string name="alert_button_text">Alert</string>
+    <string name="edittext_username_hint">Username</string>
+    <string name="edittext_password_hint">Password</string>
+    <string name="button_save">Save</string>
+    <string name="button_load">Load</string>
+    <string name="textview_dialog">Dialog and Alert</string>
+    <string name="textview_shared_preferences">Shared Preferences</string>
 </resources>
