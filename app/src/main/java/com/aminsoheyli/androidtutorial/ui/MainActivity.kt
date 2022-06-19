@@ -16,7 +16,7 @@ import com.aminsoheyli.androidtutorial.data.UserInfo
 import com.aminsoheyli.androidtutorial.data.UserPassAdapter
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ItemChangedInterface {
     private lateinit var buttonDialog: Button
     private lateinit var buttonAlert: Button
     private lateinit var buttonSave: Button
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dbManager: DBManager
     private lateinit var recyclerView: RecyclerView
     private var usersInfo = arrayListOf<UserInfo>()
-    private var userPassAdapter = UserPassAdapter(usersInfo)
+    private var userPassAdapter = UserPassAdapter(usersInfo, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        userPassAdapter = UserPassAdapter(usersInfo)
+        userPassAdapter = UserPassAdapter(usersInfo, this)
         recyclerView.adapter = userPassAdapter
 
         buttonDialog.setOnClickListener {
@@ -154,4 +154,17 @@ class MainActivity : AppCompatActivity() {
     private fun showPopUpMessage(text: String) {
         Utility.showSnackBar(buttonSave, text)
     }
+
+    override fun onItemDeleted(id: Int) {
+        val whereArgs = arrayOf(id.toString())
+        val count = dbManager.delete("id=?", whereArgs)
+//        if (count > -1)
+//        (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged() // or itemChanged
+    }
+
+
+}
+
+interface ItemChangedInterface {
+    fun onItemDeleted(id: Int)
 }
