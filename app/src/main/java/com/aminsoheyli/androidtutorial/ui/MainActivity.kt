@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.androidtutorial.R
@@ -27,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         dbManager = DBManager(this)
         initUi()
     }
-
 
     private fun initUi() {
         buttonDialog = findViewById(R.id.button_show_dialog)
@@ -72,6 +72,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonLoad.setOnClickListener {
+            val projection = { "username, password" }
+            val cursor = dbManager.query(null, null, null, sortOrder = DBManager.COLUMN_USERNAME)
+            val usernameColumnIndex = cursor.getColumnIndex(DBManager.COLUMN_USERNAME)
+            val passwordColumnIndex = cursor.getColumnIndex(DBManager.COLUMN_PASSWORD)
+            if (cursor.moveToFirst()) {
+                val tableData = StringBuilder()
+                do {
+                    tableData.append(
+                        cursor.getString(usernameColumnIndex) + ", "
+                                + cursor.getString(passwordColumnIndex) + "\n"
+                    )
+                } while (cursor.moveToNext())
+                findViewById<TextView>(R.id.textView_username_password).text = tableData.toString()
+            }
+
             val data = sharedPref.loadData()
             showPopUpMessage(data)
         }

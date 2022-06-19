@@ -2,8 +2,10 @@ package com.aminsoheyli.androidtutorial.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.database.sqlite.SQLiteQueryBuilder
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
 class DBManager(context: Context) {
@@ -41,5 +43,18 @@ class DBManager(context: Context) {
     fun insert(values: ContentValues): Long {
         val id = sqlDB.insert(TABLE_NAME, "", values)
         return id
+    }
+
+    // Select username, password from Logins where ID=1
+    fun query(
+        projection: Array<String>?,
+        selection: String?,
+        selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor {
+        val qb = SQLiteQueryBuilder()
+        qb.tables = TABLE_NAME
+
+        return qb.query(sqlDB, projection, selection, selectionArgs, null, null, sortOrder)
     }
 }
