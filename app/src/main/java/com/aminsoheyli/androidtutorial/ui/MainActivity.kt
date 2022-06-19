@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.aminsoheyli.androidtutorial.R
+import com.aminsoheyli.androidtutorial.data.SharedPref
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -16,9 +17,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonLoad: Button
     private lateinit var editTextUsername: EditText
     private lateinit var editTextPassword: EditText
+    private lateinit var sharedPref: SharedPref
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        sharedPref = SharedPref(this)
         initUi()
     }
 
@@ -50,11 +54,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonSave.setOnClickListener {
-
+            sharedPref.saveData(
+                editTextUsername.text.toString(),
+                editTextPassword.text.toString()
+            )
         }
 
         buttonLoad.setOnClickListener {
-
+            val data = sharedPref.loadData()
+            showSnackBar(data)
         }
     }
 
