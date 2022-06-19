@@ -57,4 +57,9 @@ class DBManager(context: Context) {
 
         return qb.query(sqlDB, projection, selection, selectionArgs, null, null, sortOrder)
     }
+
+    fun delete(whereClause: String, whereArgs: Array<String>?): Int {
+        return sqlDB.delete(TABLE_NAME, whereClause, whereArgs)
+    }
+
 }
