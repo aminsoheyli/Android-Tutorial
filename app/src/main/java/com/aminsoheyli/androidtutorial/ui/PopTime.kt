@@ -1,4 +1,4 @@
-package com.aminsoheyli.androidtutorial
+package com.aminsoheyli.androidtutorial.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import com.aminsoheyli.androidtutorial.R
 
 class PopTime : DialogFragment() {
     private lateinit var dialogView: View
