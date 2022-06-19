@@ -1,14 +1,14 @@
 package com.aminsoheyli.androidtutorial.ui
 
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.androidtutorial.R
+import com.aminsoheyli.androidtutorial.data.DBManager
 import com.aminsoheyli.androidtutorial.data.SharedPref
-import com.google.android.material.snackbar.Snackbar
+import com.aminsoheyli.androidtutorial.utilities.Utility
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonDialog: Button
@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         sharedPref = SharedPref(this)
+        val dbManager = DBManager(this)
         initUi()
     }
 
@@ -45,10 +46,10 @@ class MainActivity : AppCompatActivity() {
             alert.setMessage("Delete document?")
                 .setTitle("Confirmation")
                 .setPositiveButton("Yes") { dialog, which ->
-                    showSnackBar("✅ Deleted")
+                    showPopUpMessage("✅ Deleted")
                 }
                 .setNegativeButton("No") { dialog, which ->
-                    showSnackBar("❎ Canceled")
+                    showPopUpMessage("❎ Canceled")
                 }
             alert.show()
         }
@@ -62,20 +63,16 @@ class MainActivity : AppCompatActivity() {
 
         buttonLoad.setOnClickListener {
             val data = sharedPref.loadData()
-            showSnackBar(data)
+            showPopUpMessage(data)
         }
     }
 
     fun setTime(time: String) {
         val text = "Time: $time";
-        showSnackBar(text)
+        showPopUpMessage(text)
     }
 
-    private fun showSnackBar(text: String) {
-        Snackbar.make(buttonDialog, text, Snackbar.LENGTH_LONG)
-            .setTextColor(Color.YELLOW)
-            .show()
+    private fun showPopUpMessage(text: String) {
+        Utility.showSnackBar(buttonSave, text)
     }
-
-
 }

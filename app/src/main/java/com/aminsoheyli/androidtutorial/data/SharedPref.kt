@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import java.lang.StringBuilder
 
-private val USERNAME_KEY = "username"
-private val PASSWORD_KEY = "password"
+private const val USERNAME_KEY = "username"
+private const val PASSWORD_KEY = "password"
 
-class SharedPref(val context: Context) {
+class SharedPref(context: Context) {
     private var sharedPreference: SharedPreferences =
         context.getSharedPreferences("shared_preferences_section", Context.MODE_PRIVATE)
 
