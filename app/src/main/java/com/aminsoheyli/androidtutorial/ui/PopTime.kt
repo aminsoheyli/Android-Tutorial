@@ -24,7 +24,7 @@ class PopTime : DialogFragment() {
         buttonDone.setOnClickListener {
             dismiss()
             val timeOn = timePicker.hour.toString() + ":" + timePicker.minute
-            (activity as MainActivity).setTime(timeOn)
+            (activity as StorageActivity).setTime(timeOn)
         }
         return dialogView
     }

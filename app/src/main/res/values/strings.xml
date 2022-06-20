@@ -9,4 +9,5 @@
     <string name="textview_dialog">Dialog and Alert</string>
     <string name="textview_shared_preferences">Shared Preferences</string>
     <string name="button_update">Update</string>
+    <string name="button_storage_text">Storage</string>
 </resources>
