@@ -40,30 +40,26 @@ class MainActivity : AppCompatActivity() {
             checkUserPermissions()
 //            textViewShowLocation.text = getLocation()
         }
-
     }
 
-    @SuppressLint("ObsoleteSdkInt")
     private fun checkUserPermissions() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    )
                 )
-                    requestPermissions(
-                        arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
-                    )
-                return
-            }
+            )
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
+                )
+            return
         }
         getLocation()
     }
