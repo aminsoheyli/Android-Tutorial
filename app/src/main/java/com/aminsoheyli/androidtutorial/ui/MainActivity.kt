@@ -1,16 +1,14 @@
 package com.aminsoheyli.androidtutorial.ui
 
-import android.Manifest
-import android.annotation.SuppressLint
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.aminsoheyli.androidtutorial.R
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
@@ -21,11 +19,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonStorage: Button
     private lateinit var buttonGetLocation: Button
     private lateinit var textViewShowLocation: TextView
+    private lateinit var lm: LocationManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initServices()
         initUi()
+    }
+
+    private fun initServices() {
+        lm = getSystemService(LOCATION_SERVICE) as LocationManager
     }
 
     private fun initUi() {
@@ -37,54 +42,37 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, StorageActivity::class.java))
         }
         buttonGetLocation.setOnClickListener {
-            checkUserPermissions()
-//            textViewShowLocation.text = getLocation()
+            showLocation()
         }
     }
 
-    private fun checkUserPermissions() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+    private fun showLocation() {
+        // if LOCATION PERMISSION GRANTED
+        if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED ||
+            checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
         ) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            )
-                requestPermissions(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
-                )
-            return
-        }
-        getLocation()
+            val location =
+                lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val message = "log: ${location?.longitude}, lat: ${location?.latitude}"
+            textViewShowLocation.text = message
+        } else requestPermissions(
+            arrayOf(
+                ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
+            ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
+        )
     }
 
-    // TODO: When user grant APPROXIMATE Location
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         when (requestCode) {
             REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION ->
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation()
+                if (grantResults[0] == PERMISSION_GRANTED || grantResults[1] == PERMISSION_GRANTED) {
+                    showLocation()
                 } else {
-                    // Permission Denied
                     Utility.showSnackBar(buttonGetLocation, "You denied the location access")
                 }
             else -> super.onRequestPermissionsResult(requestCode, permissions!!, grantResults)
         }
-    }
-
-    //    private fun getLocation(): String {
-    private fun getLocation() {
-        val lm = getSystemService(LOCATION_SERVICE) as LocationManager
-        val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        val message = "log: ${location?.longitude}, lat: ${location?.latitude}"
-        textViewShowLocation.text = message
     }
 }
