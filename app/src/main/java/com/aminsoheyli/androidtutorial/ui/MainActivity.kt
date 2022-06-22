@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showLocation() {
         // if LOCATION PERMISSION GRANTED
+        val test= !shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) && !shouldShowRequestPermissionRationale(
+            ACCESS_COARSE_LOCATION)
         if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED ||
             checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
         ) {
@@ -55,11 +57,13 @@ class MainActivity : AppCompatActivity() {
                 lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             val message = "log: ${location?.longitude}, lat: ${location?.latitude}"
             textViewShowLocation.text = message
-        } else requestPermissions(
-            arrayOf(
-                ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
-            ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
-        )
+        } else if (!shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) && !shouldShowRequestPermissionRationale(
+                ACCESS_COARSE_LOCATION))
+            requestPermissions(
+                arrayOf(
+                    ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
+                ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
+            )
     }
 
     override fun onRequestPermissionsResult(
