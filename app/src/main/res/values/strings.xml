@@ -12,4 +12,8 @@
     <string name="button_storage_text">Storage</string>
     <string name="button_show_location">Show Location</string>
     <string name="button_direct_to_web_activity">Web Activity</string>
+    <string name="button_forward">Forward</string>
+    <string name="button_go">Go</string>
+    <string name="button_back">Back</string>
+    <string name="edit_text_url_hint">Enter URL</string>
 </resources>

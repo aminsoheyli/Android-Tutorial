@@ -26,16 +26,15 @@
         android:text="@string/button_show_location"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_storage" />
 
     <TextView
         android:id="@+id/textView_show_location"
         android:layout_width="0dp"
-        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:gravity="center"
         android:hint="GPS Location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
