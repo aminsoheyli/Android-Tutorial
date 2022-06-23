@@ -14,5 +14,6 @@ class WebActivity : AppCompatActivity() {
 
     private fun initUi() {
         val webView = findViewById<WebView>(R.id.webView)
+        webView.loadUrl("https://www.varzesh3.com/")
     }
 }
