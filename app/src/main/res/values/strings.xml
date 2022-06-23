@@ -10,5 +10,6 @@
     <string name="textview_shared_preferences">Shared Preferences</string>
     <string name="button_update">Update</string>
     <string name="button_storage_text">Storage</string>
-    <string name="button_get_location">Get Location</string>
+    <string name="button_show_location">Show Location</string>
+    <string name="button_direct_to_web_activity">Web Activity</string>
 </resources>
