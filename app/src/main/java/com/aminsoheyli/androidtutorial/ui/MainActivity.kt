@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_media_player).setOnClickListener {
             startActivity(Intent(this, MediaPlayerActivity::class.java))
         }
+        findViewById<Button>(R.id.button_notification).setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+        }
 
         buttonGetLocation.setOnClickListener {
             showLocation()
