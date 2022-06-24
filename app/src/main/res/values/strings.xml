@@ -22,4 +22,7 @@
     <string name="text_view_name_text">Name</string>
     <string name="text_view_number_text">Number</string>
     <string name="button_media_player">Media Player</string>
+    <string name="button_play_text">Play</string>
+    <string name="button_pause_text">Pause</string>
+    <string name="button_stop_text">Stop</string>
 </resources>
