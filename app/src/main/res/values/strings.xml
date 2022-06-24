@@ -19,4 +19,6 @@
     <string name="button_counter_text">Counter</string>
     <string name="button_content_provider_text">Content Provider</string>
     <string name="textview_show_location_hint">GPS Location</string>
+    <string name="text_view_name_text">Name</string>
+    <string name="text_view_number_text">Number</string>
 </resources>

@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button_content_provider).setOnClickListener {
-            startActivity(Intent(this, CounterActivity::class.java))
+            startActivity(Intent(this, ContentProviderActivity::class.java))
         }
 
         buttonGetLocation.setOnClickListener {
