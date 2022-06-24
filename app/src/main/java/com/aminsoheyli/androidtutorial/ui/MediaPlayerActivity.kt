@@ -110,9 +110,9 @@ class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
 
         })
 
-        loadAudios()
         recyclerView = findViewById(R.id.recyclerView_audios)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        loadAudios()
     }
 
     private fun loadAudios() {
