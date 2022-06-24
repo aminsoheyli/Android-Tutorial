@@ -17,15 +17,15 @@ private const val REQUEST_CODE_READ_CONTACT_PERMISSION = 1
 
 class ContentProviderActivity : AppCompatActivity() {
     private val contactsList = ArrayList<Contact>()
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content_provider)
-        readContacts()
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_contacts)
-        recyclerView.adapter = ContactAdapter(contactsList)
+        recyclerView = findViewById(R.id.recyclerView_contacts)
         recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        readContacts()
     }
 
     @SuppressLint("Range")
@@ -37,6 +37,7 @@ class ContentProviderActivity : AppCompatActivity() {
                 val phoneNumber = cursor.getString(cursor.getColumnIndex(NUMBER))
                 contactsList.add(Contact(name, phoneNumber))
             }
+            recyclerView.adapter = ContactAdapter(contactsList)
             cursor?.close()
         } else if (!shouldShowRequestPermissionRationale(READ_CONTACTS))
             requestPermissions(arrayOf(READ_CONTACTS), REQUEST_CODE_READ_CONTACT_PERMISSION)
