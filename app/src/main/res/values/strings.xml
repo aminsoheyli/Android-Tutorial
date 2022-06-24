@@ -11,7 +11,7 @@
     <string name="button_update">Update</string>
     <string name="button_storage_text">Storage</string>
     <string name="button_show_location">Show Location</string>
-    <string name="button_direct_to_web_activity">Web Activity</string>
+    <string name="button_web">Web</string>
     <string name="button_forward">Forward</string>
     <string name="button_go">Go</string>
     <string name="button_back">Back</string>
@@ -21,4 +21,5 @@
     <string name="textview_show_location_hint">GPS Location</string>
     <string name="text_view_name_text">Name</string>
     <string name="text_view_number_text">Number</string>
+    <string name="button_media_player">Media Player</string>
 </resources>

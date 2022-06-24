@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, StorageActivity::class.java))
         }
 
-        findViewById<Button>(R.id.button_direct_to_web_activity).setOnClickListener {
+        findViewById<Button>(R.id.button_web).setOnClickListener {
             startActivity(Intent(this, WebActivity::class.java))
         }
 
@@ -50,6 +50,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_content_provider).setOnClickListener {
             startActivity(Intent(this, ContentProviderActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.button_media_player).setOnClickListener {
+            startActivity(Intent(this, MediaPlayerActivity::class.java))
         }
 
         buttonGetLocation.setOnClickListener {

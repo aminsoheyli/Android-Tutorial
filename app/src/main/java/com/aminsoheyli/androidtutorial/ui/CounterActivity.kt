@@ -23,7 +23,7 @@ class CounterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_counter)
-        R.id.button_direct_to_web_activity
+        R.id.button_web
         handler = CounterHandler()
         initUi()
     }
