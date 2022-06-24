@@ -22,7 +22,7 @@
         android:id="@+id/button_show_location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/default_margin_value"
         android:text="@string/button_show_location"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,9 +33,9 @@
         android:id="@+id/textView_show_location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/default_margin_value"
         android:gravity="center"
-        android:hint="GPS Location"
+        android:hint="@string/textview_show_location_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_show_location" />
@@ -44,7 +44,7 @@
         android:id="@+id/button_direct_to_web_activity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/default_margin_value"
         android:text="@string/button_direct_to_web_activity"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,11 +55,24 @@
         android:id="@+id/button_counter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/default_margin_value"
         android:text="@string/button_counter_text"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_direct_to_web_activity" />
+
+    <Button
+        android:id="@+id/button_content_provider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_value"
+        android:text="@string/button_content_provider_text"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_counter"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="448dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

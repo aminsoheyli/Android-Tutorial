@@ -17,4 +17,6 @@
     <string name="button_back">Back</string>
     <string name="edit_text_url_hint">Enter URL</string>
     <string name="button_counter_text">Counter</string>
+    <string name="button_content_provider_text">Content Provider</string>
+    <string name="textview_show_location_hint">GPS Location</string>
 </resources>
