@@ -8,7 +8,7 @@
     tools:context=".ui.MediaPlayerActivity">
 
     <SeekBar
-        android:id="@+id/seekBar2"
+        android:id="@+id/seekBar_audio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/button_pause"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar2"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_audio"
         app:layout_goneMarginTop="8dp" />
 
     <Button
@@ -56,6 +56,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_play" />
+        app:layout_constraintTop_toBottomOf="@id/button_play"
+        tools:listitem="@layout/card_audio" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
