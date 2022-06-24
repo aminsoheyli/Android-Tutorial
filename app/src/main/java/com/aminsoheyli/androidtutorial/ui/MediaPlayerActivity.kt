@@ -1,7 +1,11 @@
 package com.aminsoheyli.androidtutorial.ui
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aminsoheyli.androidtutorial.R
 import com.aminsoheyli.androidtutorial.data.AudioAdapter
 import com.aminsoheyli.androidtutorial.data.AudioInfo
+import com.aminsoheyli.androidtutorial.utilities.Utility
 
+private const val REQUEST_CODE_ASK_PERMISSIONS_READ_EXTERNAL_STORAGE = 1
 
+@SuppressLint("Range")
 class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var seekbar: SeekBar
@@ -19,8 +26,8 @@ class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
     private val audios = ArrayList<AudioInfo>()
     private var seekBarValue = 0
 
+    /*// Online Media
     init {
-        // Online Media
         audios.add(
             AudioInfo(
                 "https://download.Quranicaudio.com/Quran/abdullaah_basfar/001.mp3",
@@ -64,7 +71,7 @@ class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
                 "An-Nas", "Abdullah Basfar", "Quran"
             )
         )
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +79,7 @@ class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
 
         initUi()
     }
+
 
     private fun initUi() {
         mediaPlayer = MediaPlayer()
@@ -102,9 +110,51 @@ class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
 
         })
 
+        loadAudios()
         recyclerView = findViewById(R.id.recyclerView_audios)
-        recyclerView.adapter = AudioAdapter(audios, this)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+
+    private fun loadAudios() {
+        if (checkSelfPermission(READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
+            val audiosUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+            val cursor = contentResolver.query(audiosUri, null, selection, null, null)
+            if (cursor?.moveToFirst() == true) {
+                do {
+                    val audioName =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME))
+                    val fullPath =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                    val albumName =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
+                    val artistName =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                    audios.add(AudioInfo(fullPath, audioName, albumName, artistName))
+                } while (cursor.moveToNext())
+                recyclerView.adapter = AudioAdapter(audios, this)
+            }
+            cursor?.close()
+        } else if (!shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE))
+            requestPermissions(
+                arrayOf(READ_EXTERNAL_STORAGE),
+                REQUEST_CODE_ASK_PERMISSIONS_READ_EXTERNAL_STORAGE
+            )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            REQUEST_CODE_ASK_PERMISSIONS_READ_EXTERNAL_STORAGE ->
+                if (grantResults[0] == PERMISSION_GRANTED)
+                    loadAudios()
+                else
+                    Utility.showSnackBar(recyclerView, "You denied the external storage access")
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
     override fun onItemClicked(audioInfo: AudioInfo) {

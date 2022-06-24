@@ -12,8 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.androidtutorial.R
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
-private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 123
-//private const val REQUEST_CODE_ASK_PERMISSIONS_COARSE_LOCATION = 124
+private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 1
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonGetLocation: Button
@@ -85,12 +84,11 @@ class MainActivity : AppCompatActivity() {
     ) {
         when (requestCode) {
             REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION ->
-                if (grantResults[0] == PERMISSION_GRANTED || grantResults[1] == PERMISSION_GRANTED) {
+                if (grantResults[0] == PERMISSION_GRANTED || grantResults[1] == PERMISSION_GRANTED)
                     showLocation()
-                } else {
+                else
                     Utility.showSnackBar(buttonGetLocation, "You denied the location access")
-                }
-            else -> super.onRequestPermissionsResult(requestCode, permissions!!, grantResults)
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 }
