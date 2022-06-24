@@ -16,4 +16,5 @@
     <string name="button_go">Go</string>
     <string name="button_back">Back</string>
     <string name="edit_text_url_hint">Enter URL</string>
+    <string name="button_counter_text">Counter</string>
 </resources>

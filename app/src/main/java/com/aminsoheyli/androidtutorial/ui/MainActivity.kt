@@ -16,8 +16,6 @@ private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 123
 //private const val REQUEST_CODE_ASK_PERMISSIONS_COARSE_LOCATION = 124
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var buttonStorage: Button
-    private lateinit var buttonWebActivity: Button
     private lateinit var buttonGetLocation: Button
     private lateinit var textViewShowLocation: TextView
     private lateinit var lm: LocationManager
@@ -35,20 +33,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        buttonStorage = findViewById(R.id.button_storage)
         buttonGetLocation = findViewById(R.id.button_show_location)
-        buttonWebActivity = findViewById(R.id.button_direct_to_web_activity)
         textViewShowLocation = findViewById(R.id.textView_show_location)
 
-        buttonStorage.setOnClickListener {
+        findViewById<Button>(R.id.button_storage).setOnClickListener {
             startActivity(Intent(this, StorageActivity::class.java))
         }
-        buttonGetLocation.setOnClickListener {
-            showLocation()
+
+        findViewById<Button>(R.id.button_direct_to_web_activity).setOnClickListener {
+            startActivity(Intent(this, WebActivity::class.java))
         }
 
-        buttonWebActivity.setOnClickListener {
-            startActivity(Intent(this, WebActivity::class.java))
+        findViewById<Button>(R.id.button_counter).setOnClickListener {
+            startActivity(Intent(this, CounterActivity::class.java))
+        }
+
+        buttonGetLocation.setOnClickListener {
+            showLocation()
         }
     }
 
