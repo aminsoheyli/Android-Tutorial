@@ -1,7 +1,9 @@
 package com.aminsoheyli.androidtutorial.ui
 
 import android.os.Bundle
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,8 @@ class WebActivity : AppCompatActivity() {
     private lateinit var buttonGo: Button
     private lateinit var editTextUrl: EditText
     private lateinit var webView: WebView
+
+    private var url = "https://www.google.com/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +31,9 @@ class WebActivity : AppCompatActivity() {
         buttonForward = findViewById(R.id.button_forward)
         editTextUrl = findViewById(R.id.editText_url)
 
-        // Default URL
-        webView.loadUrl("https://www.varzesh3.com/")
+        webView.webViewClient = CustomWebView()
+        webView.loadUrl(url)
+
 
         buttonGo.setOnClickListener {
             loadUrl(editTextUrl.text.toString())
@@ -44,6 +49,16 @@ class WebActivity : AppCompatActivity() {
     }
 
     private fun loadUrl(url: String) {
+        this.url = url
         webView.loadUrl(url)
+    }
+
+    private inner class CustomWebView : WebViewClient() {
+        override fun shouldOverrideUrlLoading(
+            view: WebView?,
+            request: WebResourceRequest?
+        ): Boolean {
+            return false
+        }
     }
 }
