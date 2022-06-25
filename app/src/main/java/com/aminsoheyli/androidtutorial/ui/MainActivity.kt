@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         } else if (!shouldShowRequestPermissionRationale(RECEIVE_SMS)) {
             requestPermissions(
-                arrayOf(RECEIVE_SMS, READ_SMS),
+                arrayOf(RECEIVE_SMS),
                 REQUEST_CODE_ASK_PERMISSIONS_READ_SMS
             )
         }
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         )
             requestPermissions(
                 arrayOf(
-                    ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION
+                    ACCESS_FINE_LOCATION
                 ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
             )
     }
@@ -108,12 +108,12 @@ class MainActivity : AppCompatActivity() {
     ) {
         when (requestCode) {
             REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION ->
-                if (grantResults[0] == PERMISSION_GRANTED || grantResults[1] == PERMISSION_GRANTED)
+                if (grantResults[0] == PERMISSION_GRANTED)
                     showLocation()
                 else
                     Utility.showSnackBar(buttonGetLocation, "You denied the location access")
             REQUEST_CODE_ASK_PERMISSIONS_READ_SMS ->
-                if (grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED)
+                if (grantResults[0] == PERMISSION_GRANTED)
                     readSMS()
                 else
                     Utility.showSnackBar(buttonGetLocation, "You denied the sms permission")
