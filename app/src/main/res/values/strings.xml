@@ -27,4 +27,5 @@
     <string name="button_stop_text">Stop</string>
     <string name="button_notification_text">Notification</string>
     <string name="button_notify_text">Notify</string>
+    <string name="button_broadcast_text">Send Broadcast</string>
 </resources>

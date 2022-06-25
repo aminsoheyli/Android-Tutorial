@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
         buttonGetLocation = findViewById(R.id.button_show_location)
         textViewShowLocation = findViewById(R.id.textView_show_location)
 
+        buttonGetLocation.setOnClickListener {
+            showLocation()
+        }
+
         findViewById<Button>(R.id.button_storage).setOnClickListener {
             startActivity(Intent(this, StorageActivity::class.java))
         }
@@ -57,9 +61,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_notification).setOnClickListener {
             startActivity(Intent(this, NotificationActivity::class.java))
         }
-
-        buttonGetLocation.setOnClickListener {
-            showLocation()
+        findViewById<Button>(R.id.button_broadcast).setOnClickListener {
+            val intent = Intent("com.example.NOTIFY")
+            intent.putExtra("msg", "Hello from activity")
+            sendBroadcast(intent)
         }
     }
 
