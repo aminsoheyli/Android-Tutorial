@@ -1,7 +1,6 @@
 package com.aminsoheyli.androidtutorial.ui
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.*
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.LocationManager
@@ -9,10 +8,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.aminsoheyli.androidtutorial.MyBroadcastReceiver
 import com.aminsoheyli.androidtutorial.R
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
 private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 1
+private const val REQUEST_CODE_ASK_PERMISSIONS_READ_SMS = 2
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonGetLocation: Button
@@ -62,9 +63,24 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotificationActivity::class.java))
         }
         findViewById<Button>(R.id.button_broadcast).setOnClickListener {
-            val intent = Intent("com.example.NOTIFY")
+            val intent = Intent(this, MyBroadcastReceiver::class.java)
+            intent.action = "com.example.NOTIFY"
             intent.putExtra("msg", "Hello from activity")
             sendBroadcast(intent)
+            readSMS()
+        }
+    }
+
+    private fun readSMS() {
+        if (checkSelfPermission(RECEIVE_SMS) == PERMISSION_GRANTED &&
+            checkSelfPermission(READ_SMS) == PERMISSION_GRANTED
+        ) {
+
+        } else if (!shouldShowRequestPermissionRationale(RECEIVE_SMS)) {
+            requestPermissions(
+                arrayOf(RECEIVE_SMS, READ_SMS),
+                REQUEST_CODE_ASK_PERMISSIONS_READ_SMS
+            )
         }
     }
 
@@ -96,6 +112,11 @@ class MainActivity : AppCompatActivity() {
                     showLocation()
                 else
                     Utility.showSnackBar(buttonGetLocation, "You denied the location access")
+            REQUEST_CODE_ASK_PERMISSIONS_READ_SMS ->
+                if (grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED)
+                    readSMS()
+                else
+                    Utility.showSnackBar(buttonGetLocation, "You denied the sms permission")
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
