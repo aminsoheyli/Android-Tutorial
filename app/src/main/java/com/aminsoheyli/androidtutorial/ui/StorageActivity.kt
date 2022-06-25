@@ -64,10 +64,10 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
             val alert = AlertDialog.Builder(this)
             alert.setMessage("Delete document?")
                 .setTitle("Confirmation")
-                .setPositiveButton("Yes") { dialog, which ->
+                .setPositiveButton("Yes") { _, _ ->
                     showPopUpMessage("✅ Deleted")
                 }
-                .setNegativeButton("No") { dialog, which ->
+                .setNegativeButton("No") { _, _ ->
                     showPopUpMessage("❎ Canceled")
                 }
             alert.show()
@@ -88,7 +88,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                 editTextPassword.text.toString()
             )*/
         }
-        editTextUsername.doOnTextChanged { text, start, before, count ->
+        editTextUsername.doOnTextChanged { text, _, _, _ ->
             val namePattern = text.toString()
 
             var selection: String? = null
@@ -112,6 +112,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                         )
                     )
                 } while (cursor.moveToNext())
+//                TODO("Fix following")
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
             }
         }
@@ -124,6 +125,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                 values.put(DBManager.COLUMN_PASSWORD, editTextPassword.text.toString())
                 val selectionArgs = arrayOf(currentUserInfo.id.toString())
                 dbManager.update(values, "id=?", selectionArgs)
+//                TODO("Fix following")
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
                 editTextPassword.setText("")
                 editTextUsername.setText("")
@@ -133,7 +135,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
         }
 
         buttonLoad.setOnClickListener {
-            val projection = { "username, password" }
+//            val projection = { "username, password" }
             val namePattern = editTextUsername.text.toString()
             var selection: String? = null
             var selectionArgs: Array<String>? = null
@@ -156,6 +158,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                         )
                     )
                 } while (cursor.moveToNext())
+//                TODO("Fix following")
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
             }
 
@@ -165,7 +168,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
     }
 
     fun setTime(time: String) {
-        val text = "Time: $time";
+        val text = "Time: $time"
         showPopUpMessage(text)
     }
 
@@ -176,6 +179,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
     override fun onItemDeleted(id: Int) {
         val whereArgs = arrayOf(id.toString())
         val count = dbManager.delete("id=?", whereArgs)
+//        TODO("Fix following")
 //        if (count > -1)
 //        (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged() // or itemChanged
     }

@@ -42,8 +42,7 @@ class DBManager(context: Context) {
     }
 
     fun insert(values: ContentValues): Long {
-        val id = sqlDB.insert(TABLE_NAME, "", values)
-        return id
+        return sqlDB.insert(TABLE_NAME, "", values)
     }
 
     // Select username, password from Logins where ID=1

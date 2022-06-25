@@ -177,8 +177,7 @@ class MediaPlayerActivity : AppCompatActivity(), ItemClickListener {
                 } catch (e: Exception) {
                 }
                 runOnUiThread {
-                    if (mediaPlayer != null)
-                        seekbar.progress = mediaPlayer.currentPosition;
+                    seekbar.progress = mediaPlayer.currentPosition
                 }
             }
         }

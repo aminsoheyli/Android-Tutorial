@@ -45,12 +45,14 @@ class UserPassAdapter(
             alert.setTitle("Remove")
                 .setMessage("Do you want to delete ${userInfo.username}")
                 .setPositiveButton("Yes") { _, _ ->
+                    Utility.showSnackBar(it, "✅ Deleted $position")
                     dataSet.removeAt(position)
+//                    notifyItemRemoved(position)
+                        // Todo: Replace notifyDataSetChanged() with notifyItemRemoved(position)
                     notifyDataSetChanged()
                     itemChangedInterface.onItemDeleted(userInfo.id)
-                    Utility.showSnackBar(it, "✅ Deleted $position")
                 }
-                .setNegativeButton("No") { dialog, which ->
+                .setNegativeButton("No") { _, _ ->
                     Utility.showSnackBar(it, "❎ Canceled")
                 }
             alert.show()

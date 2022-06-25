@@ -2,6 +2,7 @@ package com.aminsoheyli.androidtutorial.ui
 
 import android.Manifest.permission.*
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.LocationManager
 import android.os.Bundle
@@ -72,11 +73,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readSMS() {
-        if (checkSelfPermission(RECEIVE_SMS) == PERMISSION_GRANTED &&
-            checkSelfPermission(READ_SMS) == PERMISSION_GRANTED
+        if ((checkSelfPermission(RECEIVE_SMS) != PERMISSION_GRANTED ||
+                    checkSelfPermission(READ_SMS) != PERMISSION_GRANTED) &&
+            !shouldShowRequestPermissionRationale(RECEIVE_SMS)
         ) {
-
-        } else if (!shouldShowRequestPermissionRationale(RECEIVE_SMS)) {
             requestPermissions(
                 arrayOf(RECEIVE_SMS),
                 REQUEST_CODE_ASK_PERMISSIONS_READ_SMS
@@ -113,9 +113,7 @@ class MainActivity : AppCompatActivity() {
                 else
                     Utility.showSnackBar(buttonGetLocation, "You denied the location access")
             REQUEST_CODE_ASK_PERMISSIONS_READ_SMS ->
-                if (grantResults[0] == PERMISSION_GRANTED)
-                    readSMS()
-                else
+                if (grantResults[0] == PERMISSION_DENIED)
                     Utility.showSnackBar(buttonGetLocation, "You denied the sms permission")
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

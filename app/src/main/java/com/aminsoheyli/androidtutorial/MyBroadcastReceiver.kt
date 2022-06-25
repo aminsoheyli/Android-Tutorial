@@ -7,8 +7,6 @@ import android.telephony.SmsMessage
 import android.widget.Toast
 
 
-private const val TAG = "MyBroadcastReceiver"
-
 class MyBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val bundle = intent?.extras

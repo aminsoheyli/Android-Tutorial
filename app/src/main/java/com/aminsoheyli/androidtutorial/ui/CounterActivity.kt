@@ -1,5 +1,6 @@
 package com.aminsoheyli.androidtutorial.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,12 +13,13 @@ import com.aminsoheyli.androidtutorial.R
 
 const val KEY_COUNTER = "COUNTER"
 
+private const val SEEKBAR_MAX_COUNTER_VALUE = 100
+
 class CounterActivity : AppCompatActivity() {
     private lateinit var seekBar: SeekBar
     private lateinit var textViewCounter: TextView
     private lateinit var handler: Handler
     private var isRunning = false
-    private val SEEKBAR_MAX_COUNTER_VALUE = 100
     private var counterValue = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +69,7 @@ class CounterActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private inner class CounterHandler : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             val count: Int = msg.data.getInt(KEY_COUNTER)
