@@ -128,6 +128,8 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                 Utility.showSnackBar(it, "User id: $id")
             else
                 Utility.showSnackBar(it, "Can't insert")
+            editTextUsername.setText("")
+            editTextPassword.setText("")
             /*
             sharedPref.saveData(
                 editTextUsername.text.toString(),
