@@ -12,7 +12,8 @@ import com.aminsoheyli.androidtutorial.utilities.Utility
 
 class UserPassAdapter(
     private val dataSet: ArrayList<UserInfo>,
-    private val itemChangedInterface: ItemChangedInterface
+    private val itemChangedInterface: ItemChangedInterface,
+    private val view: View
 ) :
     RecyclerView.Adapter<UserPassAdapter.ViewHolder>() {
 
@@ -41,19 +42,19 @@ class UserPassAdapter(
         viewHolder.textViewUserName.text = userInfo.username
         viewHolder.textViewUserPassword.text = userInfo.password
         viewHolder.itemView.setOnLongClickListener {
-            val alert = AlertDialog.Builder(it.context)
+            val alert = AlertDialog.Builder(view.context)
             alert.setTitle("Remove")
                 .setMessage("Do you want to delete ${userInfo.username}")
                 .setPositiveButton("Yes") { _, _ ->
-                    Utility.showSnackBar(it, "✅ Deleted $position")
-                    dataSet.removeAt(position)
-//                    notifyItemRemoved(position)
-                        // Todo: Replace notifyDataSetChanged() with notifyItemRemoved(position)
-                    notifyDataSetChanged()
-                    itemChangedInterface.onItemDeleted(userInfo.id)
+                    Utility.showSnackBar(view, "✅ Deleted $position")
+                    dataSet.remove(userInfo)
+                    if (itemChangedInterface.onItemDeleted(userInfo.id, position)) {
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, itemCount)
+                    }
                 }
                 .setNegativeButton("No") { _, _ ->
-                    Utility.showSnackBar(it, "❎ Canceled")
+                    Utility.showSnackBar(view, "❎ Canceled")
                 }
             alert.show()
             false

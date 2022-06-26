@@ -1,5 +1,6 @@
 package com.aminsoheyli.androidtutorial.ui
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.os.Bundle
 import android.widget.Button
@@ -30,7 +31,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
     private var isUpdating = false
     private lateinit var currentUserInfo: UserInfo
     private var currentUserPosition: Int = -1
-    private var userPassAdapter = UserPassAdapter(usersInfo, this)
+    private lateinit var userPassAdapter: UserPassAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
         initUi()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initUi() {
         buttonDialog = findViewById(R.id.button_show_dialog)
         buttonAlert = findViewById(R.id.button_show_alert)
@@ -52,7 +54,7 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
 
         recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        userPassAdapter = UserPassAdapter(usersInfo, this)
+        userPassAdapter = UserPassAdapter(usersInfo, this, buttonAlert)
         recyclerView.adapter = userPassAdapter
 
         buttonDialog.setOnClickListener {
@@ -112,7 +114,6 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                         )
                     )
                 } while (cursor.moveToNext())
-//                TODO("Fix following")
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
             }
         }
@@ -125,7 +126,6 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                 values.put(DBManager.COLUMN_PASSWORD, editTextPassword.text.toString())
                 val selectionArgs = arrayOf(currentUserInfo.id.toString())
                 dbManager.update(values, "id=?", selectionArgs)
-//                TODO("Fix following")
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
                 editTextPassword.setText("")
                 editTextUsername.setText("")
@@ -158,12 +158,8 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                         )
                     )
                 } while (cursor.moveToNext())
-//                TODO("Fix following")
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
             }
-
-            /*val data = sharedPref.loadData()
-            showPopUpMessage(data)*/
         }
     }
 
@@ -176,12 +172,9 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
         Utility.showSnackBar(buttonSave, text)
     }
 
-    override fun onItemDeleted(id: Int) {
+    override fun onItemDeleted(id: Int, position: Int): Boolean {
         val whereArgs = arrayOf(id.toString())
-        val count = dbManager.delete("id=?", whereArgs)
-//        TODO("Fix following")
-//        if (count > -1)
-//        (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged() // or itemChanged
+        return dbManager.delete("id=?", whereArgs) > 0
     }
 
     override fun onItemUpdate(userInfo: UserInfo, position: Int) {
@@ -196,6 +189,6 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
 }
 
 interface ItemChangedInterface {
-    fun onItemDeleted(id: Int)
+    fun onItemDeleted(id: Int, position: Int): Boolean
     fun onItemUpdate(userInfo: UserInfo, position: Int)
 }
