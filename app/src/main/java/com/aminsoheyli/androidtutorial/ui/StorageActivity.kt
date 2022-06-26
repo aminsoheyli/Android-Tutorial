@@ -75,21 +75,6 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
             alert.show()
         }
 
-        buttonSave.setOnClickListener {
-            val values = ContentValues()
-            values.put(DBManager.COLUMN_USERNAME, editTextUsername.text.toString())
-            values.put(DBManager.COLUMN_PASSWORD, editTextPassword.text.toString())
-            val id = dbManager.insert(values)
-            if (id > -1)
-                Utility.showSnackBar(it, "User id: $id")
-            else
-                Utility.showSnackBar(it, "Can't insert")
-
-            /*sharedPref.saveData(
-                editTextUsername.text.toString(),
-                editTextPassword.text.toString()
-            )*/
-        }
         editTextUsername.doOnTextChanged { text, _, _, _ ->
             val namePattern = text.toString()
 
@@ -134,8 +119,24 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
             }
         }
 
+        buttonSave.setOnClickListener {
+            val values = ContentValues()
+            values.put(DBManager.COLUMN_USERNAME, editTextUsername.text.toString())
+            values.put(DBManager.COLUMN_PASSWORD, editTextPassword.text.toString())
+            val id = dbManager.insert(values)
+            if (id > -1)
+                Utility.showSnackBar(it, "User id: $id")
+            else
+                Utility.showSnackBar(it, "Can't insert")
+            /*
+            sharedPref.saveData(
+                editTextUsername.text.toString(),
+                editTextPassword.text.toString()
+            )
+            */
+        }
+
         buttonLoad.setOnClickListener {
-//            val projection = { "username, password" }
             val namePattern = editTextUsername.text.toString()
             var selection: String? = null
             var selectionArgs: Array<String>? = null
@@ -160,6 +161,10 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
                 } while (cursor.moveToNext())
                 (recyclerView.adapter as UserPassAdapter).notifyDataSetChanged()
             }
+            /*
+            val data = sharedPref.loadData()
+            showPopUpMessage(data)
+            */
         }
     }
 
