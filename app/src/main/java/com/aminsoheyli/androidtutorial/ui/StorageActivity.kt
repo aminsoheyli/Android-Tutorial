@@ -1,11 +1,7 @@
 package com.aminsoheyli.androidtutorial.ui
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -15,13 +11,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aminsoheyli.androidtutorial.R
-import com.aminsoheyli.androidtutorial.component.AlarmReceiver
-import com.aminsoheyli.androidtutorial.data.DBManager
-import com.aminsoheyli.androidtutorial.data.SharedPref
-import com.aminsoheyli.androidtutorial.data.UserInfo
-import com.aminsoheyli.androidtutorial.data.UserPassAdapter
+import com.aminsoheyli.androidtutorial.data.*
 import com.aminsoheyli.androidtutorial.utilities.Utility
-import java.util.*
 
 
 class StorageActivity : AppCompatActivity(), ItemChangedInterface {
@@ -178,24 +169,9 @@ class StorageActivity : AppCompatActivity(), ItemChangedInterface {
     }
 
     fun setTime(hour: Int, minute: Int) {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
-
-        val intent = Intent(this, AlarmReceiver::class.java)
-        intent.action = "com.example.alarm"
-        intent.putExtra("MyMessage", "Hello from alarm")
-        val pendingIntent = PendingIntent.getBroadcast(
-            this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            pendingIntent
-        )
+        val alarm = Alarm(applicationContext)
+        alarm.setAlarm(hour, minute)
+        alarm.saveAlarmData(hour, minute)
     }
 
     private fun showPopUpMessage(text: String) {
