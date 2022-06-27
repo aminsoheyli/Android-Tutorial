@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.androidtutorial.R
@@ -38,7 +39,7 @@ class ServiceActivity : AppCompatActivity() {
         }
     }
 
-    fun onButtonClick() {
+    fun onButtonClick(view: View) {
         if (mBound) {
             // Call a method from the LocalService.
             // However, if this call were something that might hang, then this request should

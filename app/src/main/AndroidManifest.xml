@@ -22,6 +22,7 @@
         android:theme="@style/Theme.AndroidTutorial"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.ServiceActivity"
             android:exported="false" />
@@ -63,6 +64,14 @@
                 <action android:name="android.provider.Telephony.SMS_READ" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".component.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.alarm" />
             </intent-filter>
         </receiver>
 
