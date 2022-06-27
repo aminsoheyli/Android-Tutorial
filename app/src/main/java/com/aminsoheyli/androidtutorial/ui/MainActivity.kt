@@ -1,19 +1,25 @@
 package com.aminsoheyli.androidtutorial.ui
 
 import android.Manifest.permission.*
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
-import android.text.Html
-import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import com.aminsoheyli.androidtutorial.R
 import com.aminsoheyli.androidtutorial.component.MyBroadcastReceiver
 import com.aminsoheyli.androidtutorial.component.MyIntentService
+import com.aminsoheyli.androidtutorial.component.MyJobService
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
 private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 1
@@ -25,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textViewShowLocation: TextView
     private lateinit var lm: LocationManager
     lateinit var intentService: Intent
+    private val ID_JOB_SERVICE = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +44,16 @@ class MainActivity : AppCompatActivity() {
     private fun initServices() {
         lm = getSystemService(LOCATION_SERVICE) as LocationManager
         intentService = Intent(this, MyIntentService::class.java)
+        // JobInfo
+        val jobBuilder =
+            JobInfo.Builder(ID_JOB_SERVICE, ComponentName(this, MyJobService::class.java))
+        jobBuilder.apply {
+            setMinimumLatency(1000)
+            setOverrideDeadline(2000)
+        }
+        // Send job to system
+        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(jobBuilder.build())
     }
 
     private fun initUi() {
@@ -98,38 +115,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getButtonToggleServiceStyledText(text: String) =
-        Html.fromHtml(getString(R.string.button_toggle_intent_service_text, text), FROM_HTML_MODE_LEGACY)
+        HtmlCompat.fromHtml(
+            getString(R.string.button_toggle_intent_service_text, text),
+            FROM_HTML_MODE_LEGACY
+        )
 
 
     private fun readSMS() {
-        if ((checkSelfPermission(RECEIVE_SMS) != PERMISSION_GRANTED ||
-                    checkSelfPermission(READ_SMS) != PERMISSION_GRANTED) &&
-            !shouldShowRequestPermissionRationale(RECEIVE_SMS)
-        ) {
-            requestPermissions(
-                arrayOf(RECEIVE_SMS),
-                REQUEST_CODE_ASK_PERMISSIONS_READ_SMS
-            )
-        }
+        if (Build.VERSION.SDK_INT >= 23)
+            if ((checkSelfPermission(RECEIVE_SMS) != PERMISSION_GRANTED ||
+                        checkSelfPermission(READ_SMS) != PERMISSION_GRANTED) &&
+                !shouldShowRequestPermissionRationale(RECEIVE_SMS)
+            ) {
+                requestPermissions(
+                    arrayOf(RECEIVE_SMS),
+                    REQUEST_CODE_ASK_PERMISSIONS_READ_SMS
+                )
+            }
     }
 
     private fun showLocation() {
         // if LOCATION PERMISSION GRANTED
-        if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED ||
-            checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
-        ) {
-            val location =
-                lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            val message = "log: ${location?.longitude}, lat: ${location?.latitude}"
-            textViewShowLocation.text = message
-        } else if (!shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) &&
-            !shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION)
-        )
-            requestPermissions(
-                arrayOf(
-                    ACCESS_FINE_LOCATION
-                ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
+        if (Build.VERSION.SDK_INT >= 23)
+            if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED ||
+                checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
+            ) {
+                val location =
+                    lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                val message = "log: ${location?.longitude}, lat: ${location?.latitude}"
+                textViewShowLocation.text = message
+            } else if (!shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) &&
+                !shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION)
             )
+                requestPermissions(
+                    arrayOf(
+                        ACCESS_FINE_LOCATION
+                    ), REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION
+                )
     }
 
     override fun onRequestPermissionsResult(
