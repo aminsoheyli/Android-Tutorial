@@ -1,5 +1,6 @@
 package com.aminsoheyli.androidtutorial.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,11 @@ class PopTime : DialogFragment() {
         buttonDone = dialogView.findViewById(R.id.button_pop_time_done)
         buttonDone.setOnClickListener {
             dismiss()
-            (activity as StorageActivity).setTime(timePicker.hour, timePicker.minute)
+            val activity = (activity as StorageActivity)
+            if (Build.VERSION.SDK_INT >= 23)
+                activity.setTime(timePicker.hour, timePicker.minute)
+            else
+                activity.setTime(timePicker.currentHour, timePicker.currentHour)
         }
         return dialogView
     }
