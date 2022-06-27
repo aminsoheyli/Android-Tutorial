@@ -45,15 +45,14 @@ class MainActivity : AppCompatActivity() {
         lm = getSystemService(LOCATION_SERVICE) as LocationManager
         intentService = Intent(this, MyIntentService::class.java)
         // JobInfo
-        val jobBuilder =
+        val jobInfoBuilder =
             JobInfo.Builder(ID_JOB_SERVICE, ComponentName(this, MyJobService::class.java))
-        jobBuilder.apply {
-            setMinimumLatency(1000)
-            setOverrideDeadline(2000)
+        jobInfoBuilder.apply {
+            setPeriodic(15 * 60 * 1000L) // minimum is 15 minutes => JobInfo.MIN_PERIOD_MILLIS = 15 * 60 * 1000L;
         }
         // Send job to system
         val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        jobScheduler.schedule(jobBuilder.build())
+        jobScheduler.schedule(jobInfoBuilder.build())
     }
 
     private fun initUi() {
