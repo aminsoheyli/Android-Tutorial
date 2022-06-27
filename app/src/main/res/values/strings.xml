@@ -28,6 +28,6 @@
     <string name="button_notification_text">Notification</string>
     <string name="button_notify_text">Notify</string>
     <string name="button_broadcast_text">Send Broadcast</string>
-    <string name="button_toggle_service_text">&lt;b>%1$s&lt;/b> Service</string>
+    <string name="button_toggle_intent_service_text">&lt;b>%1$s&lt;/b> Intent Service</string>
 
 </resources>

@@ -3,7 +3,7 @@ package com.aminsoheyli.androidtutorial.component
 import android.app.IntentService
 import android.content.Intent
 
-class MyService : IntentService("MyService") {
+class MyIntentService : IntentService("MyService") {
     companion object {
         var isRunning = false
     }

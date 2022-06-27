@@ -108,14 +108,25 @@
         app:layout_constraintTop_toBottomOf="@id/button_notification" />
 
     <Button
-        android:id="@+id/button_toggle_service"
+        android:id="@+id/button_toggle_intent_service"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin_value"
-        android:text="@string/button_toggle_service_text"
+        android:text="@string/button_toggle_intent_service_text"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button_broadcast" />
+
+    <Button
+        android:id="@+id/button_service"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_value"
+        android:text="Service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_toggle_intent_service" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

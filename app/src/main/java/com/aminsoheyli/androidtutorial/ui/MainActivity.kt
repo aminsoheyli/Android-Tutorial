@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.androidtutorial.R
 import com.aminsoheyli.androidtutorial.component.MyBroadcastReceiver
-import com.aminsoheyli.androidtutorial.component.MyService
+import com.aminsoheyli.androidtutorial.component.MyIntentService
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
 private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 1
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initServices() {
         lm = getSystemService(LOCATION_SERVICE) as LocationManager
-        intentService = Intent(this, MyService::class.java)
+        intentService = Intent(this, MyIntentService::class.java)
     }
 
     private fun initUi() {
@@ -77,11 +77,11 @@ class MainActivity : AppCompatActivity() {
             readSMS()
         }
 
-        buttonToggleService = findViewById(R.id.button_toggle_service)
+        buttonToggleService = findViewById(R.id.button_toggle_intent_service)
         buttonToggleService.text = getButtonToggleServiceStyledText("Start")
         buttonToggleService.setOnClickListener {
             var text = ""
-            if (MyService.isRunning) {
+            if (MyIntentService.isRunning) {
                 text = "Start"
                 stopService(intentService)
             } else {
@@ -89,12 +89,16 @@ class MainActivity : AppCompatActivity() {
                 startService(intentService)
             }
             buttonToggleService.text = getButtonToggleServiceStyledText(text)
-            MyService.isRunning = !MyService.isRunning
+            MyIntentService.isRunning = !MyIntentService.isRunning
+        }
+
+        findViewById<Button>(R.id.button_service).setOnClickListener {
+            startActivity(Intent(this, ServiceActivity::class.java))
         }
     }
 
     private fun getButtonToggleServiceStyledText(text: String) =
-        Html.fromHtml(getString(R.string.button_toggle_service_text, text), FROM_HTML_MODE_LEGACY)
+        Html.fromHtml(getString(R.string.button_toggle_intent_service_text, text), FROM_HTML_MODE_LEGACY)
 
 
     private fun readSMS() {
