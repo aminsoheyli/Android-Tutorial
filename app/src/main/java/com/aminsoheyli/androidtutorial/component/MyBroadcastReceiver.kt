@@ -1,4 +1,4 @@
-package com.aminsoheyli.androidtutorial
+package com.aminsoheyli.androidtutorial.component
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,7 +13,7 @@ class MyBroadcastReceiver : BroadcastReceiver() {
 
         if (intent?.action.equals("com.example.NOTIFY")) {
             val msg = bundle?.getString("msg")
-            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         } else if (intent?.action.equals("android.provider.Telephony.SMS_RECEIVED")) {
             if (bundle != null) {
                 val pdusObj: Array<Any> = bundle.get("pdus") as Array<Any>

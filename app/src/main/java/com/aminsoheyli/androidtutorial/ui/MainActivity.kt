@@ -6,11 +6,14 @@ import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.LocationManager
 import android.os.Bundle
+import android.text.Html
+import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.aminsoheyli.androidtutorial.MyBroadcastReceiver
 import com.aminsoheyli.androidtutorial.R
+import com.aminsoheyli.androidtutorial.component.MyBroadcastReceiver
+import com.aminsoheyli.androidtutorial.component.MyService
 import com.aminsoheyli.androidtutorial.utilities.Utility
 
 private const val REQUEST_CODE_ASK_PERMISSIONS_FINE_LOCATION = 1
@@ -18,8 +21,10 @@ private const val REQUEST_CODE_ASK_PERMISSIONS_READ_SMS = 2
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonGetLocation: Button
+    private lateinit var buttonToggleService: Button
     private lateinit var textViewShowLocation: TextView
     private lateinit var lm: LocationManager
+    lateinit var intentService: Intent
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initServices() {
         lm = getSystemService(LOCATION_SERVICE) as LocationManager
+        intentService = Intent(this, MyService::class.java)
     }
 
     private fun initUi() {
@@ -70,7 +76,26 @@ class MainActivity : AppCompatActivity() {
             sendBroadcast(intent)
             readSMS()
         }
+
+        buttonToggleService = findViewById(R.id.button_toggle_service)
+        buttonToggleService.text = getButtonToggleServiceStyledText("Start")
+        buttonToggleService.setOnClickListener {
+            var text = ""
+            if (MyService.isRunning) {
+                text = "Start"
+                stopService(intentService)
+            } else {
+                text = "Stop"
+                startService(intentService)
+            }
+            buttonToggleService.text = getButtonToggleServiceStyledText(text)
+            MyService.isRunning = !MyService.isRunning
+        }
     }
+
+    private fun getButtonToggleServiceStyledText(text: String) =
+        Html.fromHtml(getString(R.string.button_toggle_service_text, text), FROM_HTML_MODE_LEGACY)
+
 
     private fun readSMS() {
         if ((checkSelfPermission(RECEIVE_SMS) != PERMISSION_GRANTED ||
