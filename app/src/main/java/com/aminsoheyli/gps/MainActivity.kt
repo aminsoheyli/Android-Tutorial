@@ -27,10 +27,6 @@ class MainActivity : AppCompatActivity(), MyLocationUpdateInterface {
         buttonShowLocation.setOnClickListener {
             showLocation()
         }
-
-        if (isLocationPermissionGranted()) {
-
-        }
     }
 
     @SuppressLint("MissingPermission")
