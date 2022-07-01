@@ -72,6 +72,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .add(sydney, sydney2, sydney3)
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14f))
+
+        mMap.setOnMapClickListener {
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(it)
+                    .title("Add by click")
+            )
+        }
     }
 
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
