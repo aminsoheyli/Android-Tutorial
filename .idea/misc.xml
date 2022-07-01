@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/GPS/app/src/main/res/drawable/ic_baseline_person_pin_circle_24.xml" value="0.1795" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/GPS/app/src/main/res/layout/activity_main.xml" value="0.21574074074074073" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/GPS/app/src/main/res/layout/activity_maps.xml" value="0.34791666666666665" />
       </map>
     </option>
   </component>

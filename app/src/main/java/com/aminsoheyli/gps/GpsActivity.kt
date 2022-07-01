@@ -16,12 +16,12 @@ import androidx.core.content.ContextCompat
 
 const val REQUEST_CODE_ASK_LOCATION_PERMISSION = 1
 
-class MainActivity : AppCompatActivity(), MyLocationUpdateInterface {
+class GpsActivity : AppCompatActivity(), MyLocationUpdateInterface {
     private var isLocationShown = false
     private lateinit var textViewLocation: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_gps)
         textViewLocation = findViewById<TextView>(R.id.textView_location)
         val buttonShowLocation = findViewById<TextView>(R.id.button_show_location)
         buttonShowLocation.setOnClickListener {
