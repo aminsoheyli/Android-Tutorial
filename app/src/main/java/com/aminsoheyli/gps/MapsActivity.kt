@@ -3,6 +3,7 @@ package com.aminsoheyli.gps
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,10 +12,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -45,16 +43,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-        // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
+        val sydney2 = LatLng(-34.01, 151.02)
+        val sydney3 = LatLng(-34.02, 151.03)
         mMap.addMarker(
             MarkerOptions()
                 .position(sydney)
                 .title("Marker in Sydney")
-                .snippet("Here I live")
-                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_baseline_person_pin_circle_24))
+        )
+        mMap.addCircle(
+            CircleOptions()
+                .center(sydney)
+                .radius(200.0)
+                .strokeColor(Color.RED)
+                .fillColor(Color.BLUE)
+        )
+        mMap.addPolyline(
+            PolylineOptions()
+                .add(sydney, sydney2)
+                .width(25f)
+                .color(Color.BLUE)
+                .geodesic(true)
+        )
+        mMap.addPolygon(
+            PolygonOptions()
+                .add(sydney, sydney2, sydney3)
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14f))
     }
