@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GPS</string>
+    <string name="textView_show_location_text">Long: %1$s, Lat: %2$s</string>
+    <string name="button_show_location_text">Show Location</string>
+    <string name="textview_location_text">Location</string>
+    <string name="title_activity_maps">MapsActivity</string>
+</resources>
