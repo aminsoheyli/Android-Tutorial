@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">AndroidTutorial</string>
+    <string name="dialog_button_text">Dialog</string>
+    <string name="alert_button_text">Alert</string>
+    <string name="edittext_username_hint">Username</string>
+    <string name="edittext_password_hint">Password</string>
+    <string name="button_save">Save</string>
+    <string name="button_load">Load</string>
+    <string name="textview_dialog">Dialog and Alert</string>
+    <string name="textview_shared_preferences">Shared Preferences</string>
+    <string name="button_update">Update</string>
+    <string name="button_storage_text">Storage</string>
+    <string name="button_show_location">Show Location</string>
+    <string name="button_web">Web</string>
+    <string name="button_forward">Forward</string>
+    <string name="button_go">Go</string>
+    <string name="button_back">Back</string>
+    <string name="edit_text_url_hint">Enter URL</string>
+    <string name="button_counter_text">Counter</string>
+    <string name="button_content_provider_text">Content Provider</string>
+    <string name="textview_show_location_hint">GPS Location</string>
+    <string name="text_view_name_text">Name</string>
+    <string name="text_view_number_text">Number</string>
+    <string name="button_media_player">Media Player</string>
+    <string name="button_play_text">Play</string>
+    <string name="button_pause_text">Pause</string>
+    <string name="button_stop_text">Stop</string>
+    <string name="button_notification_text">Notification</string>
+    <string name="button_notify_text">Notify</string>
+    <string name="button_broadcast_text">Send Broadcast</string>
+    <string name="button_toggle_intent_service_text">&lt;b>%1$s&lt;/b> Intent Service</string>
+
+</resources>
