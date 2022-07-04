@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Firebase</string>
+    <string name="firebase_real_time_database_url">https://fir-demo-52002-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </resources>
