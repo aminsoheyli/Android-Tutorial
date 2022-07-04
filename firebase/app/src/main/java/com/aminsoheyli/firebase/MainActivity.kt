@@ -1,6 +1,7 @@
 package com.aminsoheyli.firebase
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -18,7 +19,7 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : AppCompatActivity() {
     lateinit var editText: EditText
     lateinit var button: Button
-    lateinit var mAdView : AdView
+    lateinit var mAdView: AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
         // Banner Ad by AdMob
         firebaseBannerAd()
-
     }
 
     private fun firebaseBannerAd() {
@@ -45,13 +45,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun firebaseRealTimeDatabase() {
         val database = Firebase.database(getString(R.string.firebase_real_time_database_url))
-        val myRef = database.getReference("msg")
-
-        button.setOnClickListener {
-            myRef.setValue(editText.text.toString())
+        val msgRef = database.getReference("msg")
+        msgRef.get().addOnSuccessListener {
+            editText.setText(it.value as String)
         }
 
-        myRef.addValueEventListener(object : ValueEventListener {
+        button.setOnClickListener {
+            msgRef.setValue(editText.text.toString())
+        }
+
+        msgRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val value = dataSnapshot.getValue<String>()
                 editText.setText(value)
