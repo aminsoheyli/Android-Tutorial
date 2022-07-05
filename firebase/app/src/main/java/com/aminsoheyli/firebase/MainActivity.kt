@@ -1,10 +1,9 @@
 package com.aminsoheyli.firebase
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.google.android.gms.ads.AdRequest
@@ -21,6 +20,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 
 class MainActivity : AppCompatActivity() {
     lateinit var editTextUsername: EditText
@@ -35,20 +36,45 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Realtime Database
         database = Firebase.database(getString(R.string.firebase_real_time_database_url))
 
-        // Remote Config
-        initRemoteConfig()
+        initFirebaseRemoteConfig()
+
+        initFirebaseBannerAd()
+
+        initFirebaseCrashReport()
+
+        initFirebaseStorage()
 
         initUi()
-        // Banner Ad by AdMob
-        firebaseBannerAd()
-
-        firebaseCrashReport()
     }
 
-    private fun firebaseCrashReport() {
+    private fun initFirebaseStorage() {
+        val storage = Firebase.storage
+        val imageViewTest = findViewById<ImageView>(R.id.imageView_cloud_test)
+        imageViewTest.setOnClickListener {
+            val storageRef = storage.getReferenceFromUrl("gs://fir-demo-52002.appspot.com")
+
+            val testRef = storageRef.child("images/test.png")
+
+            imageViewTest.isDrawingCacheEnabled = true
+            imageViewTest.buildDrawingCache()
+            val bitmap = (imageViewTest.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+            val data = baos.toByteArray()
+
+            var uploadTask = testRef.putBytes(data)
+            uploadTask.addOnFailureListener {
+                Toast.makeText(this, "Failed to save on the cloud storage", Toast.LENGTH_LONG)
+                    .show()
+            }.addOnSuccessListener { taskSnapshot ->
+                Toast.makeText(this, "Saved on the cloud storage", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun initFirebaseCrashReport() {
         val crashButton = findViewById<Button>(R.id.button_test_crash)
         crashButton.setOnClickListener {
             Firebase.crashlytics.recordException(RuntimeException("Test Crash: recordException()"))
@@ -56,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initRemoteConfig() {
+    private fun initFirebaseRemoteConfig() {
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         val minFetchInterval = 1L
 
@@ -132,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             !(editTextUsername.text.isEmpty() || editTextPasssword.text.isEmpty() || editTextAge.text.isEmpty())
     }
 
-    private fun firebaseBannerAd() {
+    private fun initFirebaseBannerAd() {
         MobileAds.initialize(this) {}
 
         mAdView = findViewById(R.id.adView)
