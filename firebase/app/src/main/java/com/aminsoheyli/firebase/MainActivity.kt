@@ -10,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.database.DataSnapshot
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("SignOut", "User signed out")
 
         }
-        findViewById<Button>(R.id.button_signin_anonymously).setOnClickListener {
+        findViewById<Button>(R.id.button_login_anonymously).setOnClickListener {
             auth.signInAnonymously().addOnCompleteListener {
                 if (!it.isSuccessful)
                     Log.w("ErrorLogin", it.exception)
@@ -157,6 +158,16 @@ class MainActivity : AppCompatActivity() {
             val password = editTextPasssword.text.toString()
             val age = editTextAge.text.toString().toInt()
             signUp(username, password, age)
+        }
+
+        findViewById<Button>(R.id.button_login).setOnClickListener {
+            val email = editTextUsername.text.toString()
+            val password = editTextPasssword.text.toString()
+            val credential = EmailAuthProvider.getCredential(email, password)
+            auth.getCurrentUser()!!.linkWithCredential((credential))
+                .addOnCompleteListener(this) {
+                    val a = 1;
+                }
         }
 
         initMessage()
