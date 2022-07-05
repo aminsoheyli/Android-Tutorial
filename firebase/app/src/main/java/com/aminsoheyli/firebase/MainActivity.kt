@@ -17,6 +17,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 class MainActivity : AppCompatActivity() {
     lateinit var editTextUsername: EditText
@@ -34,9 +37,30 @@ class MainActivity : AppCompatActivity() {
         // Realtime Database
         database = Firebase.database(getString(R.string.firebase_real_time_database_url))
 
+        // Remote Config
+        initRemoteConfig()
+
         initUi()
         // Banner Ad by AdMob
         firebaseBannerAd()
+    }
+
+    private fun initRemoteConfig() {
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val minFetchInterval = 1L
+
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = minFetchInterval
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetch(minFetchInterval).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val price = remoteConfig.getString("price")
+                Toast.makeText(applicationContext, price, Toast.LENGTH_LONG).show()
+                remoteConfig.activate()
+            }
+        }
     }
 
     private fun initUi() {
