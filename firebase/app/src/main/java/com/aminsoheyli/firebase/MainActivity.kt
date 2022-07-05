@@ -3,12 +3,14 @@ package com.aminsoheyli.firebase
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -32,6 +34,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var mAdView: AdView
     lateinit var database: FirebaseDatabase
 
+    lateinit var auth: FirebaseAuth
+    lateinit var authListener: FirebaseAuth.AuthStateListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -46,8 +51,39 @@ class MainActivity : AppCompatActivity() {
 
         initFirebaseStorage()
 
+        initFirebaseAuth()
+
         initUi()
     }
+
+    override fun onStart() {
+        super.onStart()
+        auth.addAuthStateListener(authListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        auth.removeAuthStateListener(authListener)
+    }
+
+    private fun initFirebaseAuth() {
+        auth = FirebaseAuth.getInstance()
+        authListener = FirebaseAuth.AuthStateListener {
+            val user = it.currentUser
+            if (user != null)
+                Log.d("SignIn", user.uid)
+            else
+                Log.d("SignOut", "User signed out")
+
+        }
+        findViewById<Button>(R.id.button_signin_anonymously).setOnClickListener {
+            auth.signInAnonymously().addOnCompleteListener {
+                if (!it.isSuccessful)
+                    Log.w("ErrorLogin", it.exception)
+            }
+        }
+    }
+
 
     private fun initFirebaseStorage() {
         val storage = Firebase.storage
