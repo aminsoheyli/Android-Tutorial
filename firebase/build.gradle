@@ -1,15 +1,12 @@
 buildscript {
 
     repositories {
-        // Check that you have the following line (if not, add it):
-        google()  // Google's Maven repository
+        google()
     }
 
     dependencies {
-        // ...
-
-        // Add the following line:
-        classpath 'com.google.gms:google-services:4.3.13'  // Google Services plugin
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
     }
 }
 

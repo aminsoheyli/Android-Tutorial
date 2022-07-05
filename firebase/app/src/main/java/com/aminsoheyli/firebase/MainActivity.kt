@@ -10,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -43,6 +44,16 @@ class MainActivity : AppCompatActivity() {
         initUi()
         // Banner Ad by AdMob
         firebaseBannerAd()
+
+        firebaseCrashReport()
+    }
+
+    private fun firebaseCrashReport() {
+        val crashButton = findViewById<Button>(R.id.button_test_crash)
+        crashButton.setOnClickListener {
+            Firebase.crashlytics.recordException(RuntimeException("Test Crash: recordException()"))
+            throw RuntimeException("Test Crash: throw Exception()")
+        }
     }
 
     private fun initRemoteConfig() {
