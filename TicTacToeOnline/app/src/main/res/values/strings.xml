@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">tic-tac-toe-online</string>
+    <string name="button_accept_text">Accept</string>
+    <string name="button_invite_text">Invite</string>
+    <string name="edittext_your_email_hint">Your email</string>
+    <string name="edittext_your_friend_email_hint">Your friend\'s email</string>
 </resources>
