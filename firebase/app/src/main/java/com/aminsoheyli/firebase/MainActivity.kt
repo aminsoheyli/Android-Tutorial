@@ -166,7 +166,6 @@ class MainActivity : AppCompatActivity() {
             val credential = EmailAuthProvider.getCredential(email, password)
             auth.getCurrentUser()!!.linkWithCredential((credential))
                 .addOnCompleteListener(this) {
-                    val a = 1;
                 }
         }
 
