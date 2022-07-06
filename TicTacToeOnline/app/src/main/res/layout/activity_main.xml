@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button1"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -22,6 +23,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -35,6 +37,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button3"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -48,6 +51,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button4"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -59,6 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button1" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button5"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -70,6 +75,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button6"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -81,6 +87,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button7"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -92,6 +99,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button4" />
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button8"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -104,6 +112,7 @@
 
 
     <Button
+        android:onClick="onButtonClick"
         android:id="@+id/button9"
         android:layout_width="0dp"
         android:layout_height="0dp"
