@@ -81,15 +81,23 @@ class MainActivity : AppCompatActivity() {
                 .child("request")
                 .push()
                 .setValue(userEmail)
+            startGame(beforeAt(editTextInviteEmail.text.toString()) + ":" + beforeAt(userEmail!!))
         }
 
         buttonAccept.setOnClickListener {
-            Log.d("Accept", editeTextYourEmail.text.toString())
+            usersRef
+                .child(beforeAt(editTextInviteEmail.text.toString())).child("request").push()
+                .setValue(userEmail);
+            startGame(beforeAt(userEmail!!) + ":" + beforeAt(editTextInviteEmail.text.toString()))
         }
 
         buttonLogin.setOnClickListener {
             userLogin(editeTextYourEmail.text.toString())
         }
+    }
+
+    private fun startGame(playerGameId: String) {
+        ref.child("playing").child(playerGameId).removeValue()
     }
 
     private fun handleIncomingRequest() {
@@ -145,7 +153,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
         auth.addAuthStateListener(authListener)
     }
 
