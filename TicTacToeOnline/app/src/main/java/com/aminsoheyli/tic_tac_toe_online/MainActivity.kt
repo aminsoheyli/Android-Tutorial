@@ -9,11 +9,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
-const val TAG_LOGIN = "MainActivity/Login"
-const val TAG_SIGNUP = "MainActivity/Signup"
+const val TAG_SIGN_IN = "MainActivity/Login"
+const val TAG_SIGN_UP = "MainActivity/Signup"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonInvite: Button
@@ -27,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var authListener: FirebaseAuth.AuthStateListener
     private var userEmail: String? = null
+    val database = Firebase.database("https://tictactoeonline-dccd7-default-rtdb.firebaseio.com")
+    val usersRef = database.getReference("users")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +45,16 @@ class MainActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance();
         authListener = FirebaseAuth.AuthStateListener {
             val user = it.currentUser
-            if (user != null)
-                Log.d(TAG_LOGIN, "onAuthStateChanged: Signed_in: ${user.uid}")
-            else
-                Log.d(TAG_LOGIN, "onAuthStateChanged: Signed_out:")
+            if (user != null) {
+                Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_in: ${user.uid}")
+                userEmail = user?.email
+                buttonLogin.isEnabled = false
+                editeTextYourEmail.setText(userEmail)
+                editeTextYourEmail.isEnabled = false
+                usersRef.child(beforeAt(userEmail.toString())).child("request")
+                    .setValue(user?.uid)
+            } else
+                Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_out:")
         }
     }
 
@@ -70,19 +80,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun userLogin(email: String, password: String = "somerandpass1234") {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    Log.d(TAG_SIGNUP, "createUserWithEmail:success")
-                    userEmail = user?.email
-                    buttonLogin.isEnabled = false
-                    editeTextYourEmail.setText(email)
-                } else {
-                    Log.w(TAG_SIGNUP, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show()
+            .addOnCompleteListener(this) { taskSignUp ->
+                Log.d(TAG_SIGN_UP, "createUserWithEmail:onComplete:" + taskSignUp.isSuccessful)
+                if (!taskSignUp.isSuccessful) {
+                    Log.w(TAG_SIGN_UP, "createUserWithEmail:failure", taskSignUp.exception)
+                    Toast.makeText(applicationContext, "Sing up failed", Toast.LENGTH_SHORT).show()
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this) { taskSignIn ->
+                            if (taskSignIn.isSuccessful)
+                                Log.d(TAG_SIGN_IN, "signInWithEmail:success")
+                            else
+                                Log.w(TAG_SIGN_IN, "signInWithEmail:failure", taskSignIn.exception)
+                        }
                 }
             }
     }
+
+    private fun beforeAt(email: String): String = email.split(Regex("@"))[0]
 
     override fun onStart() {
         super.onStart()

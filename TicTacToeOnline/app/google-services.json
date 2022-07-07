@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "129492242975",
+    "firebase_url": "https://tictactoeonline-dccd7-default-rtdb.firebaseio.com",
     "project_id": "tictactoeonline-dccd7",
     "storage_bucket": "tictactoeonline-dccd7.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "129492242975-fulqsnhctdb6r2jr215kbmajn3dc6ia8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aminsoheyli.tic_tac_toe_online",
+            "certificate_hash": "71a9ad6bf7723baea0d85b2d67daecc156e881a5"
+          }
+        },
         {
           "client_id": "129492242975-22u7gkeb5tee5qn4plekpdj1kmau3l3l.apps.googleusercontent.com",
           "client_type": 3
