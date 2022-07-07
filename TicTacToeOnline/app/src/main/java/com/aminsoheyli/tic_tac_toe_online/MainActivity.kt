@@ -33,11 +33,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var auth: FirebaseAuth
     private lateinit var authListener: FirebaseAuth.AuthStateListener
-    private var userEmail: String? = null
-    private var userUID: String? = null
+    private var userEmail = ""
+    private var userUID = ""
+    var playerSession = ""
+
     val database = Firebase.database("https://tictactoeonline-dccd7-default-rtdb.firebaseio.com")
     val usersRef = database.getReference("users")
-    val ref = database.reference;
+    val ref = database.reference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,16 +56,13 @@ class MainActivity : AppCompatActivity() {
         authListener = FirebaseAuth.AuthStateListener {
             val user = it.currentUser
             if (user != null) {
-                userEmail = user.email
+                userEmail = user.email.toString()
                 userUID = user.uid
                 Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_in: $userUID")
                 buttonLogin.isEnabled = false
                 editeTextYourEmail.setText(userEmail)
                 editeTextYourEmail.isEnabled = false
                 handleIncomingRequest()
-//                usersRef.child(beforeAt(userEmail.toString())).child("request")
-//                    .setValue(userUID)
-//                ref.child("users").child(beforeAt(userEmail!!)).child("request").setValue(userUID)
             } else
                 Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_out:")
         }
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 .child("request")
                 .push()
                 .setValue(userEmail)
-            startGame(beforeAt(editTextInviteEmail.text.toString()) + ":" + beforeAt(userEmail!!))
+            startGame(beforeAt(editTextInviteEmail.text.toString()) + ":" + beforeAt(userEmail))
         }
 
         buttonAccept.setOnClickListener {
@@ -94,10 +93,6 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.setOnClickListener {
             userLogin(editeTextYourEmail.text.toString())
         }
-    }
-
-    private fun startGame(playerGameId: String) {
-        ref.child("playing").child(playerGameId).removeValue()
     }
 
     private fun handleIncomingRequest() {
@@ -113,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                                 value = dataTable[key] as String
                                 Log.d(TAG_INVITE_REQUEST, value)
                                 editTextInviteEmail.setText(value)
-                                usersRef.child(beforeAt(userEmail!!))
+                                usersRef.child(beforeAt(userEmail))
                                     .child("request")
                                     .setValue(userUID)
                                 changeBackgroundColor()
@@ -162,6 +157,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onButtonClick(view: View) {
+        if (view is Button && playerSession.isNotEmpty()) {
+            var cellId = 0
+            when (view.id) {
+                R.id.button1 -> cellId = 1
+                R.id.button2 -> cellId = 2
+                R.id.button3 -> cellId = 3
+                R.id.button4 -> cellId = 4
+                R.id.button5 -> cellId = 5
+                R.id.button6 -> cellId = 6
+                R.id.button7 -> cellId = 7
+                R.id.button8 -> cellId = 8
+                R.id.button9 -> cellId = 9
+            }
+            ref.child("playing")
+                .child(playerSession)
+                .child("cellId:${cellId.toString()}")
+                .setValue(beforeAt(userEmail))
+        }
+    }
 
+    private fun startGame(playerGameId: String) {
+        playerSession = playerGameId
+        ref.child("playing").child(playerGameId).removeValue()
     }
 }
