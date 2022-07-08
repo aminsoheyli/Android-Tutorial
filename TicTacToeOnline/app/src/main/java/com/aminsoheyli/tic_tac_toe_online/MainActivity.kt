@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 const val TAG_SIGN_IN = "Main/Login"
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 buttonLogin.isEnabled = false
                 editeTextYourEmail.setText(userEmail)
                 editeTextYourEmail.isEnabled = false
-                usersRef.child(beforeAt(userEmail)).child("request").setValue(userUID);
+                usersRef.child(beforeAt(userEmail)).child("request").setValue(userUID)
                 handleIncomingRequest()
             } else
                 Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_out:")
@@ -258,10 +259,33 @@ class MainActivity : AppCompatActivity() {
         if (player2.contains(3) && player2.contains(6) && player2.contains(9)) winner = 2
         if (winner != -1) {
             // We have winer
+            setUnselectedButtonsDisable()
             if (winner == 1)
                 Toast.makeText(this, "Player 1 is winner", Toast.LENGTH_LONG).show()
             else if (winner == 2)
                 Toast.makeText(this, "Player 2 is winner", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setUnselectedButtonsDisable() {
+        val selectedCells = (player1.clone() as ArrayList<Int>)
+        selectedCells.addAll(player2)
+        val unselectedCells = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        unselectedCells.removeAll(selectedCells.toSet())
+        unselectedCells.forEach { cellId ->
+            val button = when (cellId) {
+                1 -> findViewById<Button>(R.id.button1)
+                2 -> findViewById(R.id.button2)
+                3 -> findViewById(R.id.button3)
+                4 -> findViewById(R.id.button4)
+                5 -> findViewById(R.id.button5)
+                6 -> findViewById(R.id.button6)
+                7 -> findViewById(R.id.button7)
+                8 -> findViewById(R.id.button8)
+                9 -> findViewById(R.id.button9)
+                else -> findViewById(R.id.button1)
+            } as Button
+            button.isEnabled = false
         }
     }
 
