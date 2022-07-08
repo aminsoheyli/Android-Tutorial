@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 
 const val TAG_SIGN_IN = "Main/Login"
@@ -35,11 +36,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var authListener: FirebaseAuth.AuthStateListener
     private var userEmail = ""
     private var userUID = ""
-    var playerSession = ""
+    private var playerSession = ""
+    private var mySign = "X"
+    private var activePlayer = 1 // 1 for first , 2 for second
+    private var player1 = ArrayList<Int>() // hold player 1 data
+    private var player2 = ArrayList<Int>() // hold player 2 data
 
-    val database = Firebase.database("https://tictactoeonline-dccd7-default-rtdb.firebaseio.com")
-    val usersRef = database.getReference("users")
-    val ref = database.reference
+    private val database =
+        Firebase.database("https://tictactoeonline-dccd7-default-rtdb.firebaseio.com")
+    private val ref = database.reference
+    private val usersRef = database.getReference("users")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFirebase() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance()
         authListener = FirebaseAuth.AuthStateListener {
             val user = it.currentUser
             if (user != null) {
@@ -62,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 buttonLogin.isEnabled = false
                 editeTextYourEmail.setText(userEmail)
                 editeTextYourEmail.isEnabled = false
+                usersRef.child(beforeAt(userEmail)).child("request").setValue(userUID);
                 handleIncomingRequest()
             } else
                 Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_out:")
@@ -76,18 +83,23 @@ class MainActivity : AppCompatActivity() {
         editTextInviteEmail = findViewById(R.id.editText_invite_email)
 
         buttonInvite.setOnClickListener {
-            usersRef.child(beforeAt(editTextInviteEmail.text.toString()))
+            ref.child("users")
+                .child(beforeAt(editTextInviteEmail.text.toString()))
                 .child("request")
                 .push()
                 .setValue(userEmail)
             startGame(beforeAt(editTextInviteEmail.text.toString()) + ":" + beforeAt(userEmail))
+            mySign = "X"
         }
 
         buttonAccept.setOnClickListener {
-            usersRef
-                .child(beforeAt(editTextInviteEmail.text.toString())).child("request").push()
-                .setValue(userEmail);
-            startGame(beforeAt(userEmail!!) + ":" + beforeAt(editTextInviteEmail.text.toString()))
+            ref.child("users")
+                .child(beforeAt(editTextInviteEmail.text.toString()))
+                .child("request")
+                .push()
+                .setValue(userEmail)
+            startGame(beforeAt(userEmail) + ":" + beforeAt(editTextInviteEmail.text.toString()))
+            mySign = "O"
         }
 
         buttonLogin.setOnClickListener {
@@ -97,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleIncomingRequest() {
         // Read from the database
-        usersRef.child(beforeAt(userEmail.toString())).child("request")
+        ref.child("users").child(beforeAt(userEmail)).child("request")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.value is HashMap<*, *>) {
@@ -108,7 +120,8 @@ class MainActivity : AppCompatActivity() {
                                 value = dataTable[key] as String
                                 Log.d(TAG_INVITE_REQUEST, value)
                                 editTextInviteEmail.setText(value)
-                                usersRef.child(beforeAt(userEmail))
+                                ref.child("users")
+                                    .child(beforeAt(userEmail))
                                     .child("request")
                                     .setValue(userUID)
                                 changeBackgroundColor()
@@ -132,7 +145,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG_SIGN_UP, "createUserWithEmail:onComplete:" + taskSignUp.isSuccessful)
                 if (!taskSignUp.isSuccessful) {
                     Log.w(TAG_SIGN_UP, "createUserWithEmail:failure", taskSignUp.exception)
-                    Toast.makeText(applicationContext, "Sing up failed", Toast.LENGTH_SHORT).show()
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this) { taskSignIn ->
                             if (taskSignIn.isSuccessful)
@@ -172,7 +184,7 @@ class MainActivity : AppCompatActivity() {
             }
             ref.child("playing")
                 .child(playerSession)
-                .child("cellId:${cellId.toString()}")
+                .child("cellId:$cellId")
                 .setValue(beforeAt(userEmail))
         }
     }
@@ -180,5 +192,93 @@ class MainActivity : AppCompatActivity() {
     private fun startGame(playerGameId: String) {
         playerSession = playerGameId
         ref.child("playing").child(playerGameId).removeValue()
+
+        ref.child("playing").child(playerGameId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    player1.clear()
+                    player2.clear()
+                    activePlayer = 2
+                    if (snapshot.value is HashMap<*, *>) {
+                        val dataTable = snapshot.value as HashMap<String, Any>
+                        if (dataTable != null) {
+                            var value = ""
+                            for (key in dataTable.keys) {
+                                value = dataTable[key] as String
+                                if (value != beforeAt(userEmail))
+                                    activePlayer = if (mySign == "X") 1 else 2
+                                else
+                                    activePlayer = if (mySign == "X") 2 else 1
+
+                                val splitId = key.split(Regex(":"))
+                                autoPlay(splitId[1].toInt())
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
+    private fun playGame(cellId: Int, buSelected: Button) {
+        Log.d("Player:", cellId.toString())
+        if (activePlayer == 1) {
+            buSelected.text = "X"
+            buSelected.setBackgroundColor(Color.GREEN)
+            player1.add(cellId)
+        } else if (activePlayer == 2) {
+            buSelected.text = "O"
+            buSelected.setBackgroundColor(Color.BLUE)
+            player2.add(cellId)
+        }
+        buSelected.isEnabled = false
+        checkWinner()
+    }
+
+    private fun checkWinner() {
+        var winner = -1
+        //row 1
+        if (player1.contains(1) && player1.contains(2) && player1.contains(3)) winner = 1
+        if (player2.contains(1) && player2.contains(2) && player2.contains(3)) winner = 2
+        //row 2
+        if (player1.contains(4) && player1.contains(5) && player1.contains(6)) winner = 1
+        if (player2.contains(4) && player2.contains(5) && player2.contains(6)) winner = 2
+        //row 3
+        if (player1.contains(7) && player1.contains(8) && player1.contains(9)) winner = 1
+        if (player2.contains(7) && player2.contains(8) && player2.contains(9)) winner = 2
+        //col 1
+        if (player1.contains(1) && player1.contains(4) && player1.contains(7)) winner = 1
+        if (player2.contains(1) && player2.contains(4) && player2.contains(7)) winner = 2
+        //col 2
+        if (player1.contains(2) && player1.contains(5) && player1.contains(8)) winner = 1
+        if (player2.contains(2) && player2.contains(5) && player2.contains(8)) winner = 2
+        //col 3
+        if (player1.contains(3) && player1.contains(6) && player1.contains(9)) winner = 1
+        if (player2.contains(3) && player2.contains(6) && player2.contains(9)) winner = 2
+        if (winner != -1) {
+            // We have winer
+            if (winner == 1)
+                Toast.makeText(this, "Player 1 is winner", Toast.LENGTH_LONG).show()
+            else if (winner == 2)
+                Toast.makeText(this, "Player 2 is winner", Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    fun autoPlay(cellId: Int) {
+        val buttonSelected = when (cellId) {
+            1 -> findViewById<Button>(R.id.button1)
+            2 -> findViewById(R.id.button2)
+            3 -> findViewById(R.id.button3)
+            4 -> findViewById(R.id.button4)
+            5 -> findViewById(R.id.button5)
+            6 -> findViewById(R.id.button6)
+            7 -> findViewById(R.id.button7)
+            8 -> findViewById(R.id.button8)
+            9 -> findViewById(R.id.button9)
+            else -> findViewById(R.id.button1)
+        } as Button
+        playGame(cellId, buttonSelected)
     }
 }
