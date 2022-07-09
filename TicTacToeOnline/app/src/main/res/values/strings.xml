@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">tic-tac-toe-online</string>
+    <string name="app_name">Tic Tac Toe Online</string>
     <string name="button_accept_text">Accept</string>
     <string name="button_invite_text">Invite</string>
     <string name="edittext_your_email_hint">Your email</string>
     <string name="edittext_invite_email_hint">Invite email</string>
+    <string name="button_login_text">Login</string>
 </resources>

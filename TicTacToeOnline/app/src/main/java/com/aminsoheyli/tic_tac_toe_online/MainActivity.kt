@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonInvite: Button
     private lateinit var buttonAccept: Button
     private lateinit var buttonLogin: Button
-    private lateinit var editeTextYourEmail: EditText
+    private lateinit var editTextYourEmail: EditText
     private lateinit var editTextInviteEmail: EditText
 
     // Firebase
@@ -67,8 +67,8 @@ class MainActivity : AppCompatActivity() {
                 userUID = user.uid
                 Log.d(TAG_SIGN_IN, "onAuthStateChanged: Signed_in: $userUID")
                 buttonLogin.isEnabled = false
-                editeTextYourEmail.setText(userEmail)
-                editeTextYourEmail.isEnabled = false
+                editTextYourEmail.setText(userEmail)
+                editTextYourEmail.isEnabled = false
                 usersRef.child(beforeAt(userEmail)).child("request").setValue(userUID)
                 handleIncomingRequest()
             } else
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         buttonInvite = findViewById(R.id.button_invite)
         buttonAccept = findViewById(R.id.button_accept)
         buttonLogin = findViewById(R.id.button_login)
-        editeTextYourEmail = findViewById(R.id.editText_your_email)
+        editTextYourEmail = findViewById(R.id.editText_your_email)
         editTextInviteEmail = findViewById(R.id.editText_invite_email)
 
         buttonInvite.setOnClickListener {
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonLogin.setOnClickListener {
-            userLogin(editeTextYourEmail.text.toString())
+            userLogin(editTextYourEmail.text.toString())
         }
     }
 
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                     if (snapshot.value is HashMap<*, *>) {
                         val dataTable = snapshot.value as HashMap<String, Any>
                         if (dataTable != null) {
-                            var value = ""
+                            var value: String
                             for (key in dataTable.keys) {
                                 value = dataTable[key] as String
                                 Log.d(TAG_INVITE_REQUEST, value)
@@ -203,14 +203,13 @@ class MainActivity : AppCompatActivity() {
                     if (snapshot.value is HashMap<*, *>) {
                         val dataTable = snapshot.value as HashMap<String, Any>
                         if (dataTable != null) {
-                            var value = ""
+                            var value: String
                             for (key in dataTable.keys) {
                                 value = dataTable[key] as String
-                                if (value != beforeAt(userEmail))
-                                    activePlayer = if (mySign == "X") 1 else 2
+                                activePlayer = if (value != beforeAt(userEmail))
+                                    if (mySign == "X") 1 else 2
                                 else
-                                    activePlayer = if (mySign == "X") 2 else 1
-
+                                    if (mySign == "X") 2 else 1
                                 val splitId = key.split(Regex(":"))
                                 autoPlay(splitId[1].toInt())
                             }
@@ -258,7 +257,7 @@ class MainActivity : AppCompatActivity() {
         if (player1.contains(3) && player1.contains(6) && player1.contains(9)) winner = 1
         if (player2.contains(3) && player2.contains(6) && player2.contains(9)) winner = 2
         if (winner != -1) {
-            // We have winer
+            // We have winner
             setUnselectedButtonsDisable()
             if (winner == 1)
                 Toast.makeText(this, "Player 1 is winner", Toast.LENGTH_LONG).show()
