@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             if (!isRunning)
                 try {
                     mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
+                    mediaPlayer.isLooping = false
                     mediaPlayer.prepare()
                     mediaPlayer.start()
                     isRunning = true
