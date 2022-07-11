@@ -25,11 +25,13 @@ const val REQUEST_IMAGE_CAPTURE = 2
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var buttonTakePicture: Button
+    private lateinit var buttonPlayAudio: Button
     private lateinit var imageView: ImageView
     private lateinit var sensor: Sensor
     private lateinit var sensorManager: SensorManager
     private lateinit var mediaPlayer: MediaPlayer
-    private var isRunning = false
+    private var isPlayButtonClicked = false
+    private var isPlaying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +48,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun initUi() {
         buttonTakePicture = findViewById(R.id.button_take_picture)
+        buttonPlayAudio = findViewById(R.id.button_play_audio)
         imageView = findViewById(R.id.imageView)
         buttonTakePicture.setOnClickListener {
             takePicture()
         }
+        buttonPlayAudio.setOnClickListener {
+            playAudio()
+        }
         mediaPlayer = MediaPlayer()
+    }
+
+    private fun playAudio() {
+        isPlayButtonClicked = true
     }
 
     private fun takePicture() {
@@ -97,26 +107,30 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onResume()
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
         Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show()
-        if (isRunning)
+        if (isPlaying)
             mediaPlayer.start()
     }
 
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
-        if (isRunning)
+        if (isPlaying)
             mediaPlayer.pause()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event!!.values[0] > 40)
-            if (!isRunning)
+            if (!isPlaying && isPlayButtonClicked)
                 try {
                     mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
+                    mediaPlayer.setOnCompletionListener {
+                        isPlaying = false
+                        isPlayButtonClicked = false
+                    }
                     mediaPlayer.isLooping = false
                     mediaPlayer.prepare()
                     mediaPlayer.start()
-                    isRunning = true
+                    isPlaying = true
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
