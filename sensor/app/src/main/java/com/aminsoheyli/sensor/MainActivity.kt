@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import java.io.IOException
 
@@ -95,11 +96,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show()
+        if (isRunning)
+            mediaPlayer.start()
     }
 
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
+        if (isRunning)
+            mediaPlayer.pause()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
