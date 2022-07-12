@@ -12,12 +12,15 @@ import android.hardware.SensorManager
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Vibrator
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import java.io.IOException
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 const val REQ_PERMISSION_WRITE_EXTERNAL_STORAGE = 1
@@ -27,7 +30,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var buttonTakePicture: Button
     private lateinit var buttonPlayAudio: Button
     private lateinit var imageView: ImageView
-    private lateinit var sensor: Sensor
+    private lateinit var lightSensor: Sensor
+    private lateinit var acceleratorSensor: Sensor
     private lateinit var sensorManager: SensorManager
     private lateinit var mediaPlayer: MediaPlayer
     private var isPlayButtonClicked = false
@@ -42,8 +46,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun initSensors() {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        acceleratorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     }
 
     private fun initUi() {
@@ -105,7 +109,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, acceleratorSensor, SensorManager.SENSOR_DELAY_NORMAL)
         Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show()
         if (isPlaying)
             mediaPlayer.start()
@@ -118,26 +123,53 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             mediaPlayer.pause()
     }
 
+    private val preX = 0f
+    private val preY = 0f
+    private val preZ = 0f
+    private val minSpeedToVibrate = 200
+    private var preTime = 0L
+
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event!!.values[0] > 40)
-            if (!isPlaying && isPlayButtonClicked)
-                try {
-                    mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
-                    mediaPlayer.setOnCompletionListener {
-                        isPlaying = false
-                        isPlayButtonClicked = false
-                    }
-                    mediaPlayer.isLooping = false
-                    mediaPlayer.prepare()
-                    mediaPlayer.start()
-                    isPlaying = true
-                } catch (e: IOException) {
-                    e.printStackTrace()
+        val sensor = event!!.sensor
+        if (sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event!!.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+            val timeDiff = System.currentTimeMillis() - preTime
+            if (timeDiff > 100) {
+                val distance = sqrt(
+                    (x - preX).toDouble().pow(2.0) + (y - preY).toDouble()
+                        .pow(2.0) + (z - preZ).toDouble().pow(2.0)
+                )
+                val speed = distance / timeDiff * 1000
+                if (speed > minSpeedToVibrate) {
+                    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                    vibrator.vibrate(500)
+                    Toast.makeText(this, "Shaked", Toast.LENGTH_SHORT).show()
                 }
-            else
-                mediaPlayer.start()
-        else {
-            mediaPlayer.pause()
+                preTime = System.currentTimeMillis()
+            }
+        } else if (sensor.type == Sensor.TYPE_LIGHT) {
+            if (event!!.values[0] > 40)
+                if (!isPlaying && isPlayButtonClicked)
+                    try {
+                        mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
+                        mediaPlayer.setOnCompletionListener {
+                            isPlaying = false
+                            isPlayButtonClicked = false
+                        }
+                        mediaPlayer.isLooping = false
+                        mediaPlayer.prepare()
+                        mediaPlayer.start()
+                        isPlaying = true
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                else
+                    mediaPlayer.start()
+            else {
+                mediaPlayer.pause()
+            }
         }
     }
 
