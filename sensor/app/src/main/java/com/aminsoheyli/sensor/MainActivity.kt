@@ -155,13 +155,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     try {
                         mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
                         mediaPlayer.setOnCompletionListener {
+                            mediaPlayer.stop()
                             isPlaying = false
-                            isPlayButtonClicked = false
                         }
                         mediaPlayer.isLooping = false
                         mediaPlayer.prepare()
                         mediaPlayer.start()
                         isPlaying = true
+                        isPlayButtonClicked = false
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
