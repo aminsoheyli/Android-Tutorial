@@ -10,13 +10,13 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import java.io.IOException
 import kotlin.math.pow
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var mediaPlayer: MediaPlayer
     private var isPlayButtonClicked = false
-    private var isPlaying = false
+    private var isFinished = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         buttonPlayAudio.setOnClickListener {
             playAudio()
         }
-        mediaPlayer = MediaPlayer()
+        mediaPlayer = MediaPlayer.create(this, R.raw.alhamd)
     }
 
     private fun playAudio() {
@@ -107,20 +107,21 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this)
+        if (!isFinished && mediaPlayer.isPlaying)
+            mediaPlayer.pause()
+    }
+
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, acceleratorSensor, SensorManager.SENSOR_DELAY_NORMAL)
         Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show()
-        if (isPlaying)
+        if (!isFinished && !mediaPlayer.isPlaying)
             mediaPlayer.start()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(this)
-        if (isPlaying)
-            mediaPlayer.pause()
     }
 
     private val preX = 0f
@@ -152,25 +153,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 }
             }
             Sensor.TYPE_LIGHT -> {
-                if (event.values[0] > 40)
-                    if (!isPlaying && isPlayButtonClicked)
-                        try {
-                            mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
-                            mediaPlayer.setOnCompletionListener {
-                                mediaPlayer.stop()
-                                isPlaying = false
+                if (event.values[0] > 40) {
+                    if (isFinished) {
+                        if (isPlayButtonClicked)
+                            try {
+                                mediaPlayer.apply {
+                                    setOnCompletionListener {
+                                        this@MainActivity.isFinished = true
+                                    }
+                                    isLooping = false
+                                    start()
+                                }
+                                isFinished = false
+                                isPlayButtonClicked = false
+                            } catch (e: IOException) {
+                                e.printStackTrace()
                             }
-                            mediaPlayer.isLooping = false
-                            mediaPlayer.prepare()
-                            mediaPlayer.start()
-                            isPlaying = true
-                            isPlayButtonClicked = false
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    else
+                    } else if (!mediaPlayer.isPlaying)
                         mediaPlayer.start()
-                else
+                } else if (!isFinished && mediaPlayer.isPlaying)
                     mediaPlayer.pause()
             }
         }
