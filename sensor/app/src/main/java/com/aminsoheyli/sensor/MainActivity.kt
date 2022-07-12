@@ -131,45 +131,47 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         val sensor = event!!.sensor
-        if (sensor.type == Sensor.TYPE_ACCELEROMETER) {
-            val x = event!!.values[0]
-            val y = event.values[1]
-            val z = event.values[2]
-            val timeDiff = System.currentTimeMillis() - preTime
-            if (timeDiff > 100) {
-                val distance = sqrt(
-                    (x - preX).toDouble().pow(2.0) + (y - preY).toDouble()
-                        .pow(2.0) + (z - preZ).toDouble().pow(2.0)
-                )
-                val speed = distance / timeDiff * 1000
-                if (speed > minSpeedToVibrate) {
-                    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                    vibrator.vibrate(500)
-                    Toast.makeText(this, "Shaked", Toast.LENGTH_SHORT).show()
-                }
-                preTime = System.currentTimeMillis()
-            }
-        } else if (sensor.type == Sensor.TYPE_LIGHT) {
-            if (event!!.values[0] > 40)
-                if (!isPlaying && isPlayButtonClicked)
-                    try {
-                        mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
-                        mediaPlayer.setOnCompletionListener {
-                            mediaPlayer.stop()
-                            isPlaying = false
-                        }
-                        mediaPlayer.isLooping = false
-                        mediaPlayer.prepare()
-                        mediaPlayer.start()
-                        isPlaying = true
-                        isPlayButtonClicked = false
-                    } catch (e: IOException) {
-                        e.printStackTrace()
+        when (sensor.type) {
+            Sensor.TYPE_ACCELEROMETER -> {
+                val x = event.values[0]
+                val y = event.values[1]
+                val z = event.values[2]
+                val timeDiff = System.currentTimeMillis() - preTime
+                if (timeDiff > 100) {
+                    val distance = sqrt(
+                        (x - preX).toDouble().pow(2.0) + (y - preY).toDouble()
+                            .pow(2.0) + (z - preZ).toDouble().pow(2.0)
+                    )
+                    val speed = distance / timeDiff * 1000
+                    if (speed > minSpeedToVibrate) {
+                        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                        vibrator.vibrate(500)
+                        Toast.makeText(this, "Shaked", Toast.LENGTH_SHORT).show()
                     }
+                    preTime = System.currentTimeMillis()
+                }
+            }
+            Sensor.TYPE_LIGHT -> {
+                if (event.values[0] > 40)
+                    if (!isPlaying && isPlayButtonClicked)
+                        try {
+                            mediaPlayer.setDataSource("https://cdn6.iribtv.ir/9/original/2018/07/16/636673403410852046.mp3")
+                            mediaPlayer.setOnCompletionListener {
+                                mediaPlayer.stop()
+                                isPlaying = false
+                            }
+                            mediaPlayer.isLooping = false
+                            mediaPlayer.prepare()
+                            mediaPlayer.start()
+                            isPlaying = true
+                            isPlayButtonClicked = false
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    else
+                        mediaPlayer.start()
                 else
-                    mediaPlayer.start()
-            else {
-                mediaPlayer.pause()
+                    mediaPlayer.pause()
             }
         }
     }
