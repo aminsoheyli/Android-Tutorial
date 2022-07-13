@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
-        android:id="@+id/button_select_date"
+        android:id="@+id/button_date_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -68,14 +68,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="1/12/2022"
         android:textAllCaps="false"
         android:textColor="@color/accent"
-        android:textColorHint="@color/accent"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_select_date" />
+        app:layout_constraintTop_toBottomOf="@+id/button_date_picker" />
 
     <TextView
         android:id="@+id/textView4"
@@ -94,10 +92,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:hint="15410800"
         android:textAllCaps="false"
         android:textColor="@color/accent"
-        android:textColorHint="@color/accent"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
