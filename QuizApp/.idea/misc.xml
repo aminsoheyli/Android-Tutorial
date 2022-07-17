@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/QuizApp/app/src/main/res/drawable-ldpi/selected_option_border_bg.xml" value="0.172" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/QuizApp/app/src/main/res/drawable/default_option_border_bg.xml" value="0.302" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/QuizApp/app/src/main/res/layout/activity_main.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/QuizApp/app/src/main/res/layout/activity_quiz_qustion.xml" value="0.34791666666666665" />
