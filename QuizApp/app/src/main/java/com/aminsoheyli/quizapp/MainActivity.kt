@@ -20,8 +20,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUi() {
         binding.btnStart.setOnClickListener {
-            if (binding.etName.text.toString().isNotEmpty()) {
-                startActivity(Intent(this, QuizQuestionActivity::class.java))
+            val username = binding.etName.text.toString()
+            if (username.isNotEmpty()) {
+                val intent = Intent(this, QuizQuestionActivity::class.java)
+                intent.putExtra(Constants.USER_NAME, username)
+                startActivity(intent)
                 finish()
             } else
                 Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()

@@ -1,5 +1,6 @@
 package com.aminsoheyli.quizapp
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -19,10 +20,14 @@ class QuizQuestionActivity : AppCompatActivity() {
     private val questions = Constants.getQuestions()
     private var currentQuestionIndex = 0
     private var selectedOptionPosition = -1
+    private var correctAnswers = 0
+
+    private var username: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQuizQustionBinding.inflate(layoutInflater)
+        username = intent.getStringExtra(Constants.USER_NAME)
         val view = binding.root
         setContentView(view)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -36,17 +41,18 @@ class QuizQuestionActivity : AppCompatActivity() {
                 if (currentQuestionIndex < questions.size - 1)
                     setQuestion(questions[++currentQuestionIndex])
                 else {
-                    binding.btnSubmit.text = "FINISH"
-                    Toast.makeText(
-                        this,
-                        "You have successfully completed the Quiz",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra(Constants.USER_NAME, username)
+                    intent.putExtra(Constants.TOTAL_QUESTIONS, questions.size)
+                    intent.putExtra(Constants.CORRECT_ANSWERS, correctAnswers)
+                    startActivity(intent)
                 }
             } else {
                 val question = questions[currentQuestionIndex]
                 if (question.correctAnswer != selectedOptionPosition)
                     answerView(selectedOptionPosition, R.drawable.wrong_option_border_bg)
+                else
+                    correctAnswers++
                 answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
                 if (currentQuestionIndex == questions.size - 1)
                     binding.btnSubmit.text = "FINISH"
