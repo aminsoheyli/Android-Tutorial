@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.aminsoheyli.quizapp.databinding.ActivityQuizQustionBinding
 
@@ -31,15 +32,42 @@ class QuizQuestionActivity : AppCompatActivity() {
     private fun initUi() {
         setQuestion(questions[currentQuestionIndex])
         binding.btnSubmit.setOnClickListener {
-            if (selectedOptionPosition != -1) {
-                currentQuestionIndex = (currentQuestionIndex + 1) % NUMBER_OF_QUESTIONS
-                setQuestion(questions[currentQuestionIndex])
+            if (selectedOptionPosition == -1) {
+                if (currentQuestionIndex < questions.size - 1)
+                    setQuestion(questions[++currentQuestionIndex])
+                else {
+                    binding.btnSubmit.text = "FINISH"
+                    Toast.makeText(
+                        this,
+                        "You have successfully completed the Quiz",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                val question = questions[currentQuestionIndex]
+                if (question.correctAnswer != selectedOptionPosition)
+                    answerView(selectedOptionPosition, R.drawable.wrong_option_border_bg)
+                answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
+                if (currentQuestionIndex == questions.size - 1)
+                    binding.btnSubmit.text = "FINISH"
+                else
+                    binding.btnSubmit.text = "Next Question"
+                selectedOptionPosition = -1
             }
         }
         binding.tvOptionOne.setOnClickListener { onOptionClicked(it) }
         binding.tvOptionTwo.setOnClickListener { onOptionClicked(it) }
         binding.tvOptionThree.setOnClickListener { onOptionClicked(it) }
         binding.tvOptionFour.setOnClickListener { onOptionClicked(it) }
+    }
+
+    private fun answerView(answer: Int, drawableView: Int) {
+        when (answer) {
+            0 -> binding.tvOptionOne.background = ContextCompat.getDrawable(this, drawableView)
+            1 -> binding.tvOptionTwo.background = ContextCompat.getDrawable(this, drawableView)
+            2 -> binding.tvOptionThree.background = ContextCompat.getDrawable(this, drawableView)
+            else -> binding.tvOptionFour.background = ContextCompat.getDrawable(this, drawableView)
+        }
     }
 
     private fun onOptionClicked(v: View) {
@@ -53,6 +81,8 @@ class QuizQuestionActivity : AppCompatActivity() {
 
     private fun setQuestion(question: Question) {
         defaultOptionsView()
+        binding.btnSubmit.text = "SUBMIT"
+
         binding.ivImage.setImageResource(question.image)
 
         binding.progressBar.progress = currentQuestionIndex + 1
