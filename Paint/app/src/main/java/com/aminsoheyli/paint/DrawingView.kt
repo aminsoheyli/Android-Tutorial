@@ -42,11 +42,20 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(canvasBitmap!!, 0f, 0f, canvasPaint)
-        if (!drawPath!!.isEmpty) {
-            drawPaint!!.strokeWidth = drawPath!!.brushTickness
-            drawPaint!!.color = drawPaint!!.color
-            canvas.drawPath(drawPath!!, drawPaint!!)
-        }
+        for (path in paths)
+            drawPath(canvas, path)
+        if (!drawPath!!.isEmpty)
+            drawPath(canvas, drawPath!!)
+        drawPaint!!.strokeWidth = drawPath!!.brushTickness
+        drawPaint!!.color = drawPaint!!.color
+        canvas.drawPath(drawPath!!, drawPaint!!)
+
+    }
+
+    private fun drawPath(canvas: Canvas, path: CustomPath) {
+        drawPaint!!.strokeWidth = path.brushTickness
+        drawPaint!!.color = path.color
+        canvas.drawPath(path, drawPaint!!)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -62,7 +71,10 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                     moveTo(x, y)
             }
             MotionEvent.ACTION_MOVE -> if (x != null && y != null) drawPath!!.lineTo(x, y)
-            MotionEvent.ACTION_UP -> drawPath = CustomPath(color, brushSize)
+            MotionEvent.ACTION_UP -> {
+                paths.add(drawPath!!)
+                drawPath = CustomPath(color, brushSize)
+            }
             else -> return false
         }
         invalidate()
