@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.getDrawable(this, R.drawable.pallet_pressed)
         )
         for (view in linearLayout_paint_colors.iterator())
-            view.setOnClickListener { paintColorClicked(view) }
+            view.setOnClickListener(paintColorClicked)
     }
 
     private fun showBrushSizeChooserDialog() {
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         brushDialog.show()
     }
 
-    private fun paintColorClicked(view: View) {
+    private val paintColorClicked = { view: View ->
         if (view !== imageButtonCurrentPaint) {
             val imageButton = view as ImageButton
             imageButtonCurrentPaint.setImageDrawable(
