@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PackageManagerCompat
 import androidx.core.view.get
 import androidx.core.view.iterator
 import com.aminsoheyli.paint.databinding.ActivityMainBinding
@@ -54,13 +53,17 @@ class MainActivity : AppCompatActivity() {
 
         imageButton_gallery.setOnClickListener {
             if (isReadStoragePermissionGranted()) {
-                val pickPhotoIntent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(pickPhotoIntent, GALLERY_CODE)
+                pickBackgroundImage()
             } else {
                 requestStoragePermission()
             }
         }
+    }
+
+    private fun pickBackgroundImage() {
+        val pickPhotoIntent =
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(pickPhotoIntent, GALLERY_CODE)
     }
 
     private fun showBrushSizeChooserDialog() {
@@ -132,13 +135,14 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             STORAGE_PERMISSION_CODE ->
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(
                         this,
                         "Permission granted now you car read the storage files.",
                         Toast.LENGTH_SHORT
                     ).show()
-                else
+                    pickBackgroundImage()
+                } else
                     Toast.makeText(this, "You just denied the permission.", Toast.LENGTH_SHORT)
                         .show()
         }
