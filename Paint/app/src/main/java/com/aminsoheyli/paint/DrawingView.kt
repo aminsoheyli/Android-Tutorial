@@ -80,6 +80,11 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return true
     }
 
+    fun setColor(newColor: String) {
+        color = Color.parseColor(newColor)
+        drawPaint.color = color
+    }
+
     fun setBrushSize(newSize: Float) {
         brushSize = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
