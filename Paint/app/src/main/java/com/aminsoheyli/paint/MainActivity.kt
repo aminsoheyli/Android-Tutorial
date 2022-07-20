@@ -51,13 +51,16 @@ class MainActivity : AppCompatActivity() {
         for (view in linearLayout_paint_colors.iterator())
             view.setOnClickListener(paintColorClicked)
 
-        imageButton_gallery.setOnClickListener {
+        binding.imageButtonGallery.setOnClickListener {
             if (isReadStoragePermissionGranted()) {
                 pickBackgroundImage()
             } else {
                 requestStoragePermission()
             }
         }
+
+        binding.imageButtonUndo.setOnClickListener { drawingView.undo() }
+        binding.imageButtonRedo.setOnClickListener { drawingView.redo() }
     }
 
     private fun pickBackgroundImage() {

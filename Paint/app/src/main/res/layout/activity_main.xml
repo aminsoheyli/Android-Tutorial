@@ -139,16 +139,34 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="8dp"
-            android:contentDescription="Gallery Image"
+            android:contentDescription="Gallery Icon"
             android:scaleType="fitXY"
             android:src="@drawable/ic_gallery" />
+
+        <ImageButton
+            android:id="@+id/imageButton_undo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Undo Icon"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_undo" />
+
+        <ImageButton
+            android:id="@+id/imageButton_redo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Redo Icon"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_redo" />
 
         <ImageButton
             android:id="@+id/imageButton_brush_size"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="8dp"
-            android:contentDescription="Brush Size"
+            android:contentDescription="Brush Icon"
             android:scaleType="fitXY"
             android:src="@drawable/ic_brush" />
 

@@ -16,6 +16,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var brushSize: Float = 0f
     private var color: Int = Color.BLACK
     private var paths = ArrayList<CustomPath>()
+    private var undoPaths = ArrayDeque<CustomPath>()
 
     init {
         setupDrawing()
@@ -92,6 +93,20 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             resources.displayMetrics
         )
         drawPaint.strokeWidth = brushSize
+    }
+
+    fun undo() {
+        if (paths.size > 0) {
+            undoPaths.add(paths.removeAt(paths.size - 1))
+            invalidate()
+        }
+    }
+
+    fun redo() {
+        if (undoPaths.size > 0) {
+            paths.add(undoPaths.removeLast())
+            invalidate()
+        }
     }
 
     internal inner class CustomPath(var color: Int, var brushTickness: Float) : Path()
