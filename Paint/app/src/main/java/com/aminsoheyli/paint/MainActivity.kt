@@ -1,18 +1,32 @@
 package com.aminsoheyli.paint
 
+import android.Manifest
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.PackageManagerCompat
 import androidx.core.view.get
 import androidx.core.view.iterator
 import com.aminsoheyli.paint.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val STORAGE_PERMISSION_CODE = 1
+        private const val GALLERY_CODE = 2
+    }
+
     private lateinit var drawingView: DrawingView
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageButtonCurrentPaint: ImageButton
@@ -37,6 +51,16 @@ class MainActivity : AppCompatActivity() {
         )
         for (view in linearLayout_paint_colors.iterator())
             view.setOnClickListener(paintColorClicked)
+
+        imageButton_gallery.setOnClickListener {
+            if (isReadStoragePermissionGranted()) {
+                val pickPhotoIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(pickPhotoIntent, GALLERY_CODE)
+            } else {
+                requestStoragePermission()
+            }
+        }
     }
 
     private fun showBrushSizeChooserDialog() {
@@ -75,5 +99,69 @@ class MainActivity : AppCompatActivity() {
             drawingView.setColor(colorTag)
             imageButtonCurrentPaint = imageButton
         }
+    }
+
+    private fun requestStoragePermission() {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        )
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ), STORAGE_PERMISSION_CODE
+            )
+        else
+            Toast.makeText(this, "You just denied the permission.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun isReadStoragePermissionGranted(): Boolean =
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            STORAGE_PERMISSION_CODE ->
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    Toast.makeText(
+                        this,
+                        "Permission granted now you car read the storage files.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                else
+                    Toast.makeText(this, "You just denied the permission.", Toast.LENGTH_SHORT)
+                        .show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK)
+            if (requestCode == GALLERY_CODE) {
+                try {
+                    if (data!!.data != null) {
+                        imageView_background.visibility = View.VISIBLE
+                        imageView_background.setImageURI(data.data)
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Error in parsing the image or its corrupted.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
     }
 }
