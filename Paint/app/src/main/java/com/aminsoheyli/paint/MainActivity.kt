@@ -3,6 +3,7 @@ package com.aminsoheyli.paint
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawingView: DrawingView
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageButtonCurrentPaint: ImageButton
+    private var progressDialog: ProgressDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -70,11 +72,11 @@ class MainActivity : AppCompatActivity() {
                 requestStoragePermission()
             }
         }
-
         binding.imageButtonUndo.setOnClickListener { drawingView.undo() }
         binding.imageButtonRedo.setOnClickListener { drawingView.redo() }
         binding.imageButtonSaveImage.setOnClickListener {
             if (isWriteStoragePermissionGranted()) {
+                showProgressDialog()
                 lifecycleScope.launch {
                     val frameLayoutDrawingView = binding.frameLayoutDrawingViewContainer
                     saveBitmapFile(getBitmapFromView(frameLayoutDrawingView))
@@ -205,6 +207,7 @@ class MainActivity : AppCompatActivity() {
                     fo.close()
                     result = file.absolutePath
                     runOnUiThread {
+                        cancelProgressDialog()
                         if (result.isNotEmpty())
                             Toast.makeText(
                                 this@MainActivity, "File save successfully: $result",
@@ -222,7 +225,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
         return result
+    }
+
+    private fun showProgressDialog() {
+        @Suppress("DEPRECATION")
+        progressDialog = ProgressDialog.show(
+            this,
+            "",
+            "Saving your image..."
+        )
+    }
+
+    private fun cancelProgressDialog() {
+        progressDialog?.dismiss()
+        progressDialog = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
