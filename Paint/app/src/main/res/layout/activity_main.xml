@@ -137,47 +137,52 @@
 
         <ImageButton
             android:id="@+id/imageButton_gallery"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
+            android:background="@android:color/transparent"
             android:contentDescription="Gallery Icon"
             android:scaleType="fitXY"
             android:src="@drawable/ic_gallery" />
 
         <ImageButton
             android:id="@+id/imageButton_undo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
             android:contentDescription="Undo Icon"
             android:scaleType="fitXY"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_undo" />
 
         <ImageButton
             android:id="@+id/imageButton_redo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
             android:contentDescription="Redo Icon"
+            android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:src="@drawable/ic_redo" />
 
         <ImageButton
             android:id="@+id/imageButton_brush_size"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
             android:contentDescription="Brush Icon"
+            android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:src="@drawable/ic_brush" />
 
         <ImageButton
             android:id="@+id/imageButton_save_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
             android:contentDescription="Save Icon"
             android:scaleType="fitXY"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_save" />
     </LinearLayout>
 
