@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/7MinutesWorkout/app/src/main/res/drawable/item_circular_color_accent_border.xml" value="0.157" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/7MinutesWorkout/app/src/main/res/drawable/item_color_accent_border_ripple_background.xml" value="0.2185" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/7MinutesWorkout/app/src/main/res/layout/activity_main.xml" value="0.34791666666666665" />
       </map>
     </option>
