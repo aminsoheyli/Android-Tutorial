@@ -103,7 +103,6 @@ class MainActivity : AppCompatActivity() {
             .attachAlphaSlideBar(true) // the default value is true.
             .attachBrightnessSlideBar(true) // the default value is true.
             .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
-            .setCancelable(false)
         colorPickerDialog.show()
     }
 
