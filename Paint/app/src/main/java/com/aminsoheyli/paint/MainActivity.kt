@@ -10,8 +10,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.media.MediaScannerConnection
-import android.os.Binder
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -19,13 +17,15 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.drawToBitmap
 import androidx.core.view.get
 import androidx.core.view.iterator
 import androidx.lifecycle.lifecycleScope
 import com.aminsoheyli.paint.databinding.ActivityMainBinding
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -59,13 +59,13 @@ class MainActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.imageButton_brush_size).setOnClickListener {
             showBrushSizeChooserDialog()
         }
-        // Paint Color
+        /*// Paint Color
         imageButtonCurrentPaint = linearLayout_paint_colors[0] as ImageButton
         imageButtonCurrentPaint.setImageDrawable(
             ContextCompat.getDrawable(this, R.drawable.pallet_pressed)
         )
         for (view in linearLayout_paint_colors.iterator())
-            view.setOnClickListener(paintColorClicked)
+            view.setOnClickListener(paintColorClicked)*/
 
         binding.imageButtonGallery.setOnClickListener {
             if (isReadStoragePermissionGranted()) {
@@ -87,6 +87,24 @@ class MainActivity : AppCompatActivity() {
                 requestStoragePermission()
             }
         }
+        binding.imageButtonBrushColor.setBackgroundColor(drawingView.getColor())
+        binding.imageButtonBrushColor.setOnClickListener { showColorPicker() }
+    }
+
+    private fun showColorPicker() {
+        val colorPickerDialog = ColorPickerDialog.Builder(this)
+            .setTitle("Pick a color")
+            .setPositiveButton("SELECT",
+                ColorEnvelopeListener { envelope, fromUser ->
+                    drawingView.setColor("#${envelope.hexCode}")
+                    binding.imageButtonBrushColor.setBackgroundColor(envelope.color)
+                })
+            .setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true) // the default value is true.
+            .attachBrightnessSlideBar(true) // the default value is true.
+            .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+            .setCancelable(false)
+        colorPickerDialog.show()
     }
 
     private fun pickBackgroundImage() {
