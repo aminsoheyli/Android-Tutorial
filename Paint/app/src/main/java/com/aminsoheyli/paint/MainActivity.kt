@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -208,12 +209,13 @@ class MainActivity : AppCompatActivity() {
                     result = file.absolutePath
                     runOnUiThread {
                         cancelProgressDialog()
-                        if (result.isNotEmpty())
+                        if (result.isNotEmpty()) {
                             Toast.makeText(
                                 this@MainActivity, "File save successfully: $result",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        else
+                            shareImage(result)
+                        } else
                             Toast.makeText(
                                 this@MainActivity, "Something went wrong while saving the file.",
                                 Toast.LENGTH_SHORT
@@ -241,6 +243,14 @@ class MainActivity : AppCompatActivity() {
     private fun cancelProgressDialog() {
         progressDialog?.dismiss()
         progressDialog = null
+    }
+
+    private fun shareImage(path: String) {
+        MediaScannerConnection.scanFile(applicationContext, arrayOf(path), null) { path, uri ->
+            val shareIntent =
+                Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_STREAM, uri).setType("image/png")
+            startActivity(Intent.createChooser(shareIntent, "Share"))
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
