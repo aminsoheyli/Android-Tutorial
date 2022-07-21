@@ -58,13 +58,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.imageButton_brush_size).setOnClickListener {
             showBrushSizeChooserDialog()
         }
-        /*// Paint Color
-        imageButtonCurrentPaint = linearLayout_paint_colors[0] as ImageButton
-        imageButtonCurrentPaint.setImageDrawable(
-            ContextCompat.getDrawable(this, R.drawable.pallet_pressed)
-        )
-        for (view in linearLayout_paint_colors.iterator())
-            view.setOnClickListener(paintColorClicked)*/
 
         binding.imageButtonGallery.setOnClickListener {
             if (isReadStoragePermissionGranted()) {
@@ -138,21 +131,6 @@ class MainActivity : AppCompatActivity() {
         brushDialog.show()
     }
 
-    private val paintColorClicked = { view: View ->
-        if (view !== imageButtonCurrentPaint) {
-            val imageButton = view as ImageButton
-            imageButtonCurrentPaint.setImageDrawable(
-                ContextCompat.getDrawable(this, R.drawable.pallet_normal)
-            )
-            imageButton.setImageDrawable(
-                ContextCompat.getDrawable(this, R.drawable.pallet_pressed)
-            )
-            val colorTag = imageButton.tag.toString()
-            drawingView.setColor(colorTag)
-            imageButtonCurrentPaint = imageButton
-        }
-    }
-
     private fun requestStoragePermission() {
         if (!ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
@@ -182,9 +160,7 @@ class MainActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -201,7 +177,6 @@ class MainActivity : AppCompatActivity() {
                         .show()
         }
     }
-
 
     private fun getBitmapFromView(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -222,7 +197,6 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val bytes = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
-//                    val imagePath = File(filesDir, "pictures")
                     val file =
                         File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath + File.separator + "Paint_" + System.currentTimeMillis() / 1000 + ".png")
                     val fo = FileOutputStream(file)
@@ -233,7 +207,7 @@ class MainActivity : AppCompatActivity() {
                         cancelProgressDialog()
                         if (result.isNotEmpty()) {
                             Toast.makeText(
-                                this@MainActivity, "$result",
+                                this@MainActivity, result,
                                 Toast.LENGTH_LONG
                             ).show()
                             shareImage(result)
@@ -245,11 +219,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                     result = ""
+                    cancelProgressDialog()
                     e.printStackTrace()
                 }
             }
         }
-
         return result
     }
 
@@ -267,8 +241,8 @@ class MainActivity : AppCompatActivity() {
         progressDialog = null
     }
 
-    private fun shareImage(path: String) {
-        MediaScannerConnection.scanFile(applicationContext, arrayOf(path), null) { path, uri ->
+    private fun shareImage(imagePath: String) {
+        MediaScannerConnection.scanFile(applicationContext, arrayOf(imagePath), null) { path, uri ->
             val shareIntent =
                 Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_STREAM, uri).setType("image/png")
             startActivity(Intent.createChooser(shareIntent, "Share"))
