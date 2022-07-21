@@ -13,6 +13,7 @@ import android.media.MediaScannerConnection
 import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
@@ -201,8 +202,9 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val bytes = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+//                    val imagePath = File(filesDir, "pictures")
                     val file =
-                        File(externalCacheDir?.absoluteFile.toString() + File.separator + "Paint_" + System.currentTimeMillis() / 1000 + ".png")
+                        File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath + File.separator + "Paint_" + System.currentTimeMillis() / 1000 + ".png")
                     val fo = FileOutputStream(file)
                     fo.write(bytes.toByteArray())
                     fo.close()
@@ -211,8 +213,8 @@ class MainActivity : AppCompatActivity() {
                         cancelProgressDialog()
                         if (result.isNotEmpty()) {
                             Toast.makeText(
-                                this@MainActivity, "File save successfully: $result",
-                                Toast.LENGTH_SHORT
+                                this@MainActivity, "$result",
+                                Toast.LENGTH_LONG
                             ).show()
                             shareImage(result)
                         } else
