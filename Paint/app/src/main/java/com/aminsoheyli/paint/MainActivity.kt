@@ -20,13 +20,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.core.view.iterator
 import androidx.lifecycle.lifecycleScope
 import com.aminsoheyli.paint.databinding.ActivityMainBinding
 import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.flag.BubbleFlag
+import com.skydoves.colorpickerview.flag.FlagMode
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -88,11 +87,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.imageButtonBrushColor.setBackgroundColor(drawingView.getColor())
-        binding.imageButtonBrushColor.setOnClickListener { showColorPicker() }
+        binding.imageButtonBrushColor.setOnClickListener { showColorPickerDialog() }
     }
 
-    private fun showColorPicker() {
-        val colorPickerDialog = ColorPickerDialog.Builder(this)
+    private fun showColorPickerDialog() {
+        val colorPickerDialogBuilder = ColorPickerDialog.Builder(this)
             .setTitle("Pick a color")
             .setPositiveButton("SELECT",
                 ColorEnvelopeListener { envelope, fromUser ->
@@ -103,7 +102,11 @@ class MainActivity : AppCompatActivity() {
             .attachAlphaSlideBar(true) // the default value is true.
             .attachBrightnessSlideBar(true) // the default value is true.
             .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
-        colorPickerDialog.show()
+            .setView(R.layout.dialog_brush_color)
+        val bubbleFlag = BubbleFlag(this)
+        bubbleFlag.flagMode = FlagMode.FADE
+        colorPickerDialogBuilder.colorPickerView.flagView = bubbleFlag
+        colorPickerDialogBuilder.show()
     }
 
     private fun pickBackgroundImage() {
@@ -278,8 +281,10 @@ class MainActivity : AppCompatActivity() {
             if (requestCode == GALLERY_CODE) {
                 try {
                     if (data!!.data != null) {
-                        imageView_background.visibility = View.VISIBLE
-                        imageView_background.setImageURI(data.data)
+                        binding.imageViewBackground.apply {
+                            visibility = View.VISIBLE
+                            setImageURI(data.data)
+                        }
                     } else {
                         Toast.makeText(
                             this,
