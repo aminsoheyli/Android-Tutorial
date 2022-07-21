@@ -6,6 +6,10 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
 
 class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private lateinit var drawPath: CustomPath

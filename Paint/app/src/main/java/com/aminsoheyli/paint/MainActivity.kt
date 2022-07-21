@@ -5,6 +5,10 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,10 +18,18 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.drawToBitmap
 import androidx.core.view.get
 import androidx.core.view.iterator
+import androidx.lifecycle.lifecycleScope
 import com.aminsoheyli.paint.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -61,6 +73,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.imageButtonUndo.setOnClickListener { drawingView.undo() }
         binding.imageButtonRedo.setOnClickListener { drawingView.redo() }
+        binding.imageButtonSaveImage.setOnClickListener {
+            if (isWriteStoragePermissionGranted()) {
+                lifecycleScope.launch {
+                    val frameLayoutDrawingView = binding.frameLayoutDrawingViewContainer
+                    saveBitmapFile(getBitmapFromView(frameLayoutDrawingView))
+                }
+            } else {
+                requestStoragePermission()
+            }
+        }
     }
 
     private fun pickBackgroundImage() {
@@ -129,6 +151,11 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
 
+    private fun isWriteStoragePermissionGranted(): Boolean =
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -149,6 +176,53 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "You just denied the permission.", Toast.LENGTH_SHORT)
                         .show()
         }
+    }
+
+
+    private fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val backgroundDrawable = view.background
+        if (backgroundDrawable != null)
+            backgroundDrawable.draw(canvas)
+        else
+            canvas.drawColor(Color.WHITE)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    private suspend fun saveBitmapFile(bitmap: Bitmap?): String {
+        var result = ""
+        withContext(Dispatchers.IO) {
+            if (bitmap != null) {
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+                    val file =
+                        File(externalCacheDir?.absoluteFile.toString() + File.separator + "Paint_" + System.currentTimeMillis() / 1000 + ".png")
+                    val fo = FileOutputStream(file)
+                    fo.write(bytes.toByteArray())
+                    fo.close()
+                    result = file.absolutePath
+                    runOnUiThread {
+                        if (result.isNotEmpty())
+                            Toast.makeText(
+                                this@MainActivity, "File save successfully: $result",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        else
+                            Toast.makeText(
+                                this@MainActivity, "Something went wrong while saving the file.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    }
+                } catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+        return result
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

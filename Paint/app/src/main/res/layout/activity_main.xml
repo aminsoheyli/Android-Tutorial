@@ -170,7 +170,14 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_brush" />
 
-
+        <ImageButton
+            android:id="@+id/imageButton_save_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:contentDescription="Save Icon"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_save" />
     </LinearLayout>
 
 
