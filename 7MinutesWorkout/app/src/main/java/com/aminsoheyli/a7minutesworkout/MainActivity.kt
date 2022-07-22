@@ -1,5 +1,6 @@
 package com.aminsoheyli.a7minutesworkout
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
@@ -16,10 +17,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        val frameLayoutStart = binding.frameLayoutStart
-        frameLayoutStart.setOnClickListener {
-            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show()
+        binding.frameLayoutStart.setOnClickListener {
+            startActivity(Intent(this, ExerciseActivity::class.java))
         }
-
     }
 }
