@@ -20,8 +20,3 @@ object Constants {
         return list
     }
 }
-
-fun main() {
-    for(item in Constants.defaultExerciseList())
-        print(item.id)
-}
