@@ -1,5 +1,7 @@
 package com.aminsoheyli.a7minutesworkout
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
@@ -23,6 +25,7 @@ class ExerciseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExerciseBinding
     private lateinit var restTimer: CountDownTimer
+    private lateinit var player: MediaPlayer
     private var progressValue = 0
     private val exerciseList = Constants.defaultExerciseList()
     private var currentExerciseIndex = -1
@@ -42,8 +45,20 @@ class ExerciseActivity : AppCompatActivity() {
         binding.toolbarExerciseActivity.setNavigationOnClickListener {
             onBackPressed()
         }
+        initMediaPlayer()
         initTextToSpeech()
         setupRest()
+    }
+
+    private fun initMediaPlayer() {
+        try {
+            val soundURI =
+                Uri.parse("android.resource://com.aminsoheyli.a7minutesworkout/" + R.raw.rest_sound)
+            player = MediaPlayer.create(applicationContext, soundURI)
+            player.isLooping = false
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun initTextToSpeech() {
@@ -62,38 +77,35 @@ class ExerciseActivity : AppCompatActivity() {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        tts.stop()
-        tts.shutdown()
-    }
-
     private fun setupExercise() {
+        val exercise = exerciseList[currentExerciseIndex]
+        textToSpeech(exercise.name)
         val bottomPaddingInDP =
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
                 .toInt()
         binding.root.setPaddingRelative(0, 0, 0, bottomPaddingInDP)
         binding.imageViewExerciseImage.visibility = View.VISIBLE
-        val exercise = exerciseList[currentExerciseIndex]
         binding.textViewExerciseName.text = exercise.name
         binding.imageViewExerciseImage.setImageResource(exercise.image)
         binding.textView.visibility = View.GONE
         binding.textViewUpcommingExerciseName.visibility = View.GONE
-        textToSpeech(exercise.name)
         if (currentExerciseIndex < exerciseList.size - 1)
-            setProgressBar(EXERCISE_DURATION_TIME, EXERCISE_MAX_PROGRESS) { setupRest() }
+            setProgressBar(EXERCISE_DURATION_TIME, EXERCISE_MAX_PROGRESS) {
+                player.start()
+                setupRest()
+            }
         else
             Toast.makeText(this@ExerciseActivity, "Finished", Toast.LENGTH_LONG).show()
     }
 
     private fun setupRest() {
+        textToSpeech("Rest for $REST_MAX_PROGRESS seconds")
         binding.root.setPaddingRelative(0, 0, 0, 0)
         binding.imageViewExerciseImage.visibility = View.GONE
         binding.textViewExerciseName.text = getString(R.string.rest_title)
         binding.textView.visibility = View.VISIBLE
         binding.textViewUpcommingExerciseName.visibility = View.VISIBLE
         binding.textViewUpcommingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
-        textToSpeech("Rest for $REST_MAX_PROGRESS seconds")
         setProgressBar(REST_DURATION_TIME, REST_MAX_PROGRESS) {
             currentExerciseIndex++
             setupExercise()
@@ -120,5 +132,12 @@ class ExerciseActivity : AppCompatActivity() {
                 onFinishFunction()
             }
         }.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tts.stop()
+        tts.shutdown()
+        player.stop()
     }
 }
