@@ -1,5 +1,6 @@
 package com.aminsoheyli.a7minutesworkout
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.a7minutesworkout.databinding.ActivityExerciseBinding
+import com.aminsoheyli.a7minutesworkout.databinding.DialogCustomBackConfirmationBinding
 import java.util.*
 
 class ExerciseActivity : AppCompatActivity() {
@@ -41,12 +43,27 @@ class ExerciseActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarExerciseActivity)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbarExerciseActivity.setNavigationOnClickListener {
-            onBackPressed()
+            displayConfirmationDialog()
         }
         initMediaPlayer()
         initTextToSpeech()
         initCountDownTimers()
         setupRecyclerView()
+    }
+
+    private fun displayConfirmationDialog() {
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(dialogBinding.root)
+        dialog.setCanceledOnTouchOutside(false)
+        dialogBinding.buttonYes.setOnClickListener {
+            this@ExerciseActivity.finish()
+            dialog.dismiss()
+        }
+        dialogBinding.buttonNo.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun initCountDownTimers() {
@@ -141,6 +158,10 @@ class ExerciseActivity : AppCompatActivity() {
 
     private fun textToSpeech(text: String) {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    override fun onBackPressed() {
+        displayConfirmationDialog()
     }
 
     override fun onDestroy() {
