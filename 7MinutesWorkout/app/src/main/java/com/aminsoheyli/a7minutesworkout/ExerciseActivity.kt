@@ -24,7 +24,7 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExerciseBinding
-    private lateinit var recyclerViewAdapter: ExerciseStatusAdapter
+    private lateinit var exerciseAdapter: ExerciseStatusAdapter
 
     private lateinit var restTimer: CountDownTimer
     private lateinit var player: MediaPlayer
@@ -54,8 +54,8 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        recyclerViewAdapter = ExerciseStatusAdapter(exerciseList)
-        binding.recyclerViewExerciseStatus.adapter = recyclerViewAdapter
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList)
+        binding.recyclerViewExerciseStatus.adapter = exerciseAdapter
     }
 
     private fun initMediaPlayer() {
@@ -100,6 +100,8 @@ class ExerciseActivity : AppCompatActivity() {
         if (currentExerciseIndex < exerciseList.size - 1)
             setProgressBar(EXERCISE_DURATION_TIME, EXERCISE_MAX_PROGRESS) {
                 player.start()
+                exerciseList[currentExerciseIndex].status = Exercise.Status.COMPLETED
+                exerciseAdapter.notifyItemChanged(currentExerciseIndex)
                 setupRest()
             }
         else
@@ -116,6 +118,8 @@ class ExerciseActivity : AppCompatActivity() {
         binding.textViewUpcomingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
         setProgressBar(REST_DURATION_TIME, REST_MAX_PROGRESS) {
             currentExerciseIndex++
+            exerciseList[currentExerciseIndex].status = Exercise.Status.SELECTED
+            exerciseAdapter.notifyItemChanged(currentExerciseIndex)
             setupExercise()
         }
     }
