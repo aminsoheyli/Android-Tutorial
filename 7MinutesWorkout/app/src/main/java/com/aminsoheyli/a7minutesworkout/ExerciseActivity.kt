@@ -50,6 +50,8 @@ class ExerciseActivity : AppCompatActivity() {
         val exercise = exerciseList[currentExerciseIndex]
         binding.textViewExerciseName.text = exercise.name
         binding.imageViewExerciseImage.setImageResource(exercise.image)
+        binding.textView.visibility = View.GONE
+        binding.textViewUpcommingExerciseName.visibility = View.GONE
         if (currentExerciseIndex < exerciseList.size - 1)
             setProgressBar(EXERCISE_DURATION_TIME, EXERCISE_MAX_PROGRESS) { setupRest() }
         else
@@ -60,6 +62,9 @@ class ExerciseActivity : AppCompatActivity() {
         binding.root.setPaddingRelative(0, 0, 0, 0)
         binding.imageViewExerciseImage.visibility = View.GONE
         binding.textViewExerciseName.text = getString(R.string.rest_title)
+        binding.textView.visibility = View.VISIBLE
+        binding.textViewUpcommingExerciseName.visibility = View.VISIBLE
+        binding.textViewUpcommingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
         setProgressBar(REST_DURATION_TIME, REST_MAX_PROGRESS) {
             currentExerciseIndex++
             setupExercise()
