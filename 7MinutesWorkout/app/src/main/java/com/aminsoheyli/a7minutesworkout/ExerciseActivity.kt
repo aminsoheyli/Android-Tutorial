@@ -1,5 +1,6 @@
 package com.aminsoheyli.a7minutesworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -19,8 +20,9 @@ class ExerciseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExerciseBinding
     private lateinit var exerciseAdapter: ExerciseStatusAdapter
+    private lateinit var exerciseCountDownTimer: CountDownTimer
+    private lateinit var restCountDownTimer: CountDownTimer
 
-    private lateinit var restTimer: CountDownTimer
     private lateinit var player: MediaPlayer
     private var progressValue = 0
     private val exerciseList = Constants.defaultExerciseList()
@@ -43,8 +45,70 @@ class ExerciseActivity : AppCompatActivity() {
         }
         initMediaPlayer()
         initTextToSpeech()
-        setupRest()
+        initCountDownTimers()
         setupRecyclerView()
+    }
+
+    private fun initCountDownTimers() {
+        exerciseCountDownTimer = createCountDownTimer(EXERCISE_DURATION_TIME_SECONDS) {
+            player.start()
+            exerciseList[currentExerciseIndex].status = Exercise.Status.COMPLETED
+            exerciseAdapter.notifyItemChanged(currentExerciseIndex)
+            if (currentExerciseIndex != exerciseList.size - 1)
+                setupRest()
+            else {
+                startActivity(Intent(this, FinishActivity::class.java))
+                finish()
+            }
+        }
+        restCountDownTimer = createCountDownTimer(REST_DURATION_TIME_SECONDS) {
+            currentExerciseIndex++
+            exerciseList[currentExerciseIndex].status = Exercise.Status.SELECTED
+            exerciseAdapter.notifyItemChanged(currentExerciseIndex)
+            setupExercise()
+        }
+        setupRest()
+    }
+
+    private fun setupExercise() {
+        val exercise = exerciseList[currentExerciseIndex]
+        textToSpeech(exercise.name)
+        binding.imageViewExerciseImage.visibility = View.VISIBLE
+        binding.textViewExerciseName.text = exercise.name
+        binding.imageViewExerciseImage.setImageResource(exercise.image)
+        binding.textViewExerciseTitle.visibility = View.GONE
+        binding.textViewUpcomingExerciseName.visibility = View.GONE
+        if (currentExerciseIndex < exerciseList.size) {
+            binding.progressBar.max = EXERCISE_DURATION_TIME_SECONDS
+            exerciseCountDownTimer.start()
+        }
+    }
+
+    private fun setupRest() {
+        textToSpeech("Rest for $REST_DURATION_TIME_SECONDS seconds")
+        binding.imageViewExerciseImage.visibility = View.GONE
+        binding.textViewExerciseName.text = getString(R.string.rest_title)
+        binding.textViewExerciseTitle.visibility = View.VISIBLE
+        binding.textViewUpcomingExerciseName.visibility = View.VISIBLE
+        binding.textViewUpcomingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
+        binding.progressBar.max = REST_DURATION_TIME_SECONDS
+        restCountDownTimer.start()
+    }
+
+    private fun createCountDownTimer(
+        duration: Int,
+        onFinishFunction: () -> Any
+    ): CountDownTimer = object : CountDownTimer(duration * 1000L, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val progress = duration - ++progressValue
+            binding.progressBar.progress = progress
+            binding.textViewTimer.text = progress.toString()
+        }
+
+        override fun onFinish() {
+            progressValue = 0
+            onFinishFunction()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -79,68 +143,10 @@ class ExerciseActivity : AppCompatActivity() {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
-    private fun setupExercise() {
-        val exercise = exerciseList[currentExerciseIndex]
-        textToSpeech(exercise.name)
-        binding.imageViewExerciseImage.visibility = View.VISIBLE
-        binding.textViewExerciseName.text = exercise.name
-        binding.imageViewExerciseImage.setImageResource(exercise.image)
-        binding.textViewExerciseTitle.visibility = View.GONE
-        binding.textViewUpcomingExerciseName.visibility = View.GONE
-        if (currentExerciseIndex < exerciseList.size)
-            setProgressBar(
-                EXERCISE_DURATION_TIME_SECONDS
-            ) {
-                player.start()
-                exerciseList[currentExerciseIndex].status = Exercise.Status.COMPLETED
-                exerciseAdapter.notifyItemChanged(currentExerciseIndex)
-                if (currentExerciseIndex != exerciseList.size - 1)
-                    setupRest()
-                else {
-                    finish()
-                }
-            }
-    }
-
-    private fun setupRest() {
-        textToSpeech("Rest for $REST_DURATION_TIME_SECONDS seconds")
-        binding.imageViewExerciseImage.visibility = View.GONE
-        binding.textViewExerciseName.text = getString(R.string.rest_title)
-        binding.textViewExerciseTitle.visibility = View.VISIBLE
-        binding.textViewUpcomingExerciseName.visibility = View.VISIBLE
-        binding.textViewUpcomingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
-        setProgressBar(REST_DURATION_TIME_SECONDS) {
-            currentExerciseIndex++
-            exerciseList[currentExerciseIndex].status = Exercise.Status.SELECTED
-            exerciseAdapter.notifyItemChanged(currentExerciseIndex)
-            setupExercise()
-        }
-    }
-
-    private fun setProgressBar(
-        duration: Int,
-        onFinishFunction: () -> Any
-    ) {
-        binding.progressBar.max = duration
-        binding.progressBar.progress = progressValue
-        restTimer = object : CountDownTimer(duration * 1000L, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val progress = duration - progressValue++
-                binding.progressBar.progress = progress
-                binding.textViewTimer.text = progress.toString()
-            }
-
-            override fun onFinish() {
-                restTimer.cancel()
-                progressValue = 0
-                onFinishFunction()
-            }
-        }.start()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        restTimer.cancel()
+        exerciseCountDownTimer.cancel()
+        restCountDownTimer.cancel()
         tts.stop()
         tts.shutdown()
         player.stop()
