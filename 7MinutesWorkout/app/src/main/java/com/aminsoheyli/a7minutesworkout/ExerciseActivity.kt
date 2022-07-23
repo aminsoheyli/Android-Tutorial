@@ -24,6 +24,7 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExerciseBinding
+
     private lateinit var restTimer: CountDownTimer
     private lateinit var player: MediaPlayer
     private var progressValue = 0
