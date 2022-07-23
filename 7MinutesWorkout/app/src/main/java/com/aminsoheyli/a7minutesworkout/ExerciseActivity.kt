@@ -13,13 +13,8 @@ import java.util.*
 
 class ExerciseActivity : AppCompatActivity() {
     companion object {
-        // Exercise
-        const val EXERCISE_DURATION_TIME = 30000L
-        const val EXERCISE_MAX_PROGRESS = 30
-
-        // Rest
-        const val REST_DURATION_TIME = 5000L
-        const val REST_MAX_PROGRESS = 5
+        const val EXERCISE_DURATION_TIME_SECONDS = 30
+        const val REST_DURATION_TIME_SECONDS = 5
     }
 
     private lateinit var binding: ActivityExerciseBinding
@@ -92,25 +87,29 @@ class ExerciseActivity : AppCompatActivity() {
         binding.imageViewExerciseImage.setImageResource(exercise.image)
         binding.textViewExerciseTitle.visibility = View.GONE
         binding.textViewUpcomingExerciseName.visibility = View.GONE
-        if (currentExerciseIndex < exerciseList.size - 1)
-            setProgressBar(EXERCISE_DURATION_TIME, EXERCISE_MAX_PROGRESS) {
+        if (currentExerciseIndex < exerciseList.size)
+            setProgressBar(
+                EXERCISE_DURATION_TIME_SECONDS
+            ) {
                 player.start()
                 exerciseList[currentExerciseIndex].status = Exercise.Status.COMPLETED
                 exerciseAdapter.notifyItemChanged(currentExerciseIndex)
-                setupRest()
+                if (currentExerciseIndex != exerciseList.size - 1)
+                    setupRest()
+                else {
+                    finish()
+                }
             }
-        else
-            Toast.makeText(this@ExerciseActivity, "Finished", Toast.LENGTH_LONG).show()
     }
 
     private fun setupRest() {
-        textToSpeech("Rest for $REST_MAX_PROGRESS seconds")
+        textToSpeech("Rest for $REST_DURATION_TIME_SECONDS seconds")
         binding.imageViewExerciseImage.visibility = View.GONE
         binding.textViewExerciseName.text = getString(R.string.rest_title)
         binding.textViewExerciseTitle.visibility = View.VISIBLE
         binding.textViewUpcomingExerciseName.visibility = View.VISIBLE
         binding.textViewUpcomingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
-        setProgressBar(REST_DURATION_TIME, REST_MAX_PROGRESS) {
+        setProgressBar(REST_DURATION_TIME_SECONDS) {
             currentExerciseIndex++
             exerciseList[currentExerciseIndex].status = Exercise.Status.SELECTED
             exerciseAdapter.notifyItemChanged(currentExerciseIndex)
@@ -119,15 +118,14 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private fun setProgressBar(
-        duration: Long,
-        maxProgressValue: Int,
+        duration: Int,
         onFinishFunction: () -> Any
     ) {
-        binding.progressBar.max = maxProgressValue
+        binding.progressBar.max = duration
         binding.progressBar.progress = progressValue
-        restTimer = object : CountDownTimer(duration, 1000) {
+        restTimer = object : CountDownTimer(duration * 1000L, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                val progress = maxProgressValue - progressValue++
+                val progress = duration - progressValue++
                 binding.progressBar.progress = progress
                 binding.textViewTimer.text = progress.toString()
             }
@@ -142,6 +140,7 @@ class ExerciseActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        restTimer.cancel()
         tts.stop()
         tts.shutdown()
         player.stop()
