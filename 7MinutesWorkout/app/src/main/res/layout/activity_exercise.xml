@@ -18,18 +18,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/colorPrimary" />
 
+
+    <ImageView
+        android:id="@+id/imageView_exercise_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_jumping_jacks"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/textView_exercise_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_exercise_activity"
+        app:layout_constraintVertical_chainStyle="packed" />
+
     <TextView
-        android:id="@+id/textView_title"
-        style="bold"
+        android:id="@+id/textView_exercise_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GET READY FOR"
+        android:layout_marginBottom="8dp"
+        android:text="Exercise Name"
         android:textColor="@color/colorAccent"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout_progress_bar"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/frameLayout_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/toolbar_exercise_activity" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView_exercise_image" />
 
     <FrameLayout
         android:id="@+id/frameLayout_progress_bar"
@@ -39,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_exercise_activity">
+        app:layout_constraintTop_toBottomOf="@+id/textView_exercise_name">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -49,9 +64,9 @@
             android:layout_gravity="center"
             android:background="@drawable/circular_progress_bar_gray"
             android:indeterminate="false"
-            tools:progress="70"
             android:progressDrawable="@drawable/circular_progress_bar"
-            android:rotation="-90" />
+            android:rotation="-90"
+            tools:progress="70" />
 
         <LinearLayout
             android:layout_width="60dp"
