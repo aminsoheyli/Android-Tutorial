@@ -24,6 +24,7 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExerciseBinding
+    private lateinit var recyclerViewAdapter: ExerciseStatusAdapter
 
     private lateinit var restTimer: CountDownTimer
     private lateinit var player: MediaPlayer
@@ -49,6 +50,12 @@ class ExerciseActivity : AppCompatActivity() {
         initMediaPlayer()
         initTextToSpeech()
         setupRest()
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        recyclerViewAdapter = ExerciseStatusAdapter(exerciseList)
+        binding.recyclerViewExerciseStatus.adapter = recyclerViewAdapter
     }
 
     private fun initMediaPlayer() {
@@ -88,8 +95,8 @@ class ExerciseActivity : AppCompatActivity() {
         binding.imageViewExerciseImage.visibility = View.VISIBLE
         binding.textViewExerciseName.text = exercise.name
         binding.imageViewExerciseImage.setImageResource(exercise.image)
-        binding.textView.visibility = View.GONE
-        binding.textViewUpcommingExerciseName.visibility = View.GONE
+        binding.textViewExerciseTitle.visibility = View.GONE
+        binding.textViewUpcomingExerciseName.visibility = View.GONE
         if (currentExerciseIndex < exerciseList.size - 1)
             setProgressBar(EXERCISE_DURATION_TIME, EXERCISE_MAX_PROGRESS) {
                 player.start()
@@ -104,9 +111,9 @@ class ExerciseActivity : AppCompatActivity() {
         binding.root.setPaddingRelative(0, 0, 0, 0)
         binding.imageViewExerciseImage.visibility = View.GONE
         binding.textViewExerciseName.text = getString(R.string.rest_title)
-        binding.textView.visibility = View.VISIBLE
-        binding.textViewUpcommingExerciseName.visibility = View.VISIBLE
-        binding.textViewUpcommingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
+        binding.textViewExerciseTitle.visibility = View.VISIBLE
+        binding.textViewUpcomingExerciseName.visibility = View.VISIBLE
+        binding.textViewUpcomingExerciseName.text = exerciseList[currentExerciseIndex + 1].name
         setProgressBar(REST_DURATION_TIME, REST_MAX_PROGRESS) {
             currentExerciseIndex++
             setupExercise()
