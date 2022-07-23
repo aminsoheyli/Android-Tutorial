@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
-import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -88,10 +87,6 @@ class ExerciseActivity : AppCompatActivity() {
     private fun setupExercise() {
         val exercise = exerciseList[currentExerciseIndex]
         textToSpeech(exercise.name)
-        val bottomPaddingInDP =
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
-                .toInt()
-        binding.root.setPaddingRelative(0, 0, 0, bottomPaddingInDP)
         binding.imageViewExerciseImage.visibility = View.VISIBLE
         binding.textViewExerciseName.text = exercise.name
         binding.imageViewExerciseImage.setImageResource(exercise.image)
@@ -110,7 +105,6 @@ class ExerciseActivity : AppCompatActivity() {
 
     private fun setupRest() {
         textToSpeech("Rest for $REST_MAX_PROGRESS seconds")
-        binding.root.setPaddingRelative(0, 0, 0, 0)
         binding.imageViewExerciseImage.visibility = View.GONE
         binding.textViewExerciseName.text = getString(R.string.rest_title)
         binding.textViewExerciseTitle.visibility = View.VISIBLE
