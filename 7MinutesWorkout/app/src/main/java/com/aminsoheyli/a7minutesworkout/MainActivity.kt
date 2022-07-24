@@ -18,5 +18,9 @@ class MainActivity : AppCompatActivity() {
         binding.frameLayoutStart.setOnClickListener {
             startActivity(Intent(this, ExerciseActivity::class.java))
         }
+
+        binding.frameLayoutBmi.setOnClickListener{
+            startActivity(Intent(this,BmiActivity::class.java ))
+        }
     }
 }
