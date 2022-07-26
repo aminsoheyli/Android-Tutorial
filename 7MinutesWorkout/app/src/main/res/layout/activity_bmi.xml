@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:visibility="visible">
 
             <TextView
@@ -67,7 +67,6 @@
                 android:gravity="center"
                 android:text="YOUR BMI"
                 android:textAllCaps="true"
-                android:visibility="invisible"
                 android:textSize="16sp" />
 
             <TextView
