@@ -32,9 +32,6 @@ class BmiActivity : AppCompatActivity() {
         binding.toolbarBmiActivity.setNavigationOnClickListener {
             onBackPressed()
         }
-        binding.toolbarBmiActivity.setNavigationOnClickListener {
-            onBackPressed()
-        }
 
         binding.btnCalculateUnits.setOnClickListener {
             if (isMetricUnitsValid())

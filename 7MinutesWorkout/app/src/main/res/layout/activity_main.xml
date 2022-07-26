@@ -46,7 +46,8 @@
         android:layout_height="70dp"
         android:background="@drawable/item_circular_color_accent_background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/frameLayout_history"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frameLayout_start">
 
@@ -68,7 +69,37 @@
         android:textColor="@color/colorAccent"
         android:textSize="@dimen/default_button_text_size"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/frameLayout_bmi"
+        app:layout_constraintStart_toStartOf="@id/frameLayout_bmi"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout_bmi" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout_history"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/item_circular_color_accent_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/frameLayout_bmi"
+        app:layout_constraintTop_toBottomOf="@id/frameLayout_start">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:scaleType="center"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_calendar" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="History"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/default_button_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/frameLayout_history"
+        app:layout_constraintStart_toStartOf="@id/frameLayout_history"
+        app:layout_constraintTop_toBottomOf="@id/frameLayout_history" />
 </androidx.constraintlayout.widget.ConstraintLayout>
