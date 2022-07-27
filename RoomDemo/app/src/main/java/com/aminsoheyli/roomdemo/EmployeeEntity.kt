@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "employee-table")
+const val EMPLOYEE_TABLE_NAME = "employee-table"
+
+@Entity(tableName = EMPLOYEE_TABLE_NAME)
 data class EmployeeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
