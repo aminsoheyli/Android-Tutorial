@@ -1,4 +1,4 @@
-package com.aminsoheyli.roomdemo
+package com.aminsoheyli.roomdemo.database
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

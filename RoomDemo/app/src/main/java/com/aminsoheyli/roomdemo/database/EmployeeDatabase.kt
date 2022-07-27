@@ -1,4 +1,4 @@
-package com.aminsoheyli.roomdemo
+package com.aminsoheyli.roomdemo.database
 
 import android.content.Context
 import androidx.room.Database
