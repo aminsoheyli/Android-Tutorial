@@ -77,15 +77,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateRecordDialog(id: Int) {
-        val updateDialog = Dialog(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
+        val updateDialog = Dialog(this, R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
         val dialogBinding = DialogUpdateBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
 
         lifecycleScope.launch {
             employeeDao.fetchEmployeeById(id).collect {
-                dialogBinding.etUpdateName.setText(it.name)
-                dialogBinding.etUpdateEmailId.setText(it.email)
+                if(it != null){
+                    dialogBinding.etUpdateName.setText(it.name)
+                    dialogBinding.etUpdateEmailId.setText(it.email)
+                }
             }
         }
 
