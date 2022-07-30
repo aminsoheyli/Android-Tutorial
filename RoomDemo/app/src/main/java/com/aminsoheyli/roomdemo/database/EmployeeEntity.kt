@@ -8,10 +8,10 @@ const val EMPLOYEE_TABLE_NAME = "employee-table"
 
 @Entity(tableName = EMPLOYEE_TABLE_NAME)
 data class EmployeeEntity(
-    val name: String = "",
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var name: String = "",
     // ColumnInfo -> name is the internal name for the column name of this table and it's optional
     @ColumnInfo(name = "email-id")
-    val email: String = "",
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    var email: String = ""
 )
