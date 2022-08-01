@@ -16,4 +16,5 @@
     <color name="secondary_text_color">#7A8089</color>
     <color name="button_gradient_end_color">#0BCCEB</color>
     <color name="button_gradient_start_color">#0A80F5</color>
+    <color name="snackbar_error_color">#F72400</color>
 </resources>
