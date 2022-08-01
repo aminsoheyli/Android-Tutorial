@@ -11,6 +11,10 @@ import com.google.firebase.ktx.Firebase
 class Firestore {
     private val firestore = Firebase.firestore
 
+    companion object {
+        fun getCurrentUserId(): String = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    }
+
     fun registerUser(userInfo: User, onRegisterSuccessListener: () -> Unit) {
         firestore.collection(Constants.USERS)
             .document(getCurrentUserId())
@@ -34,6 +38,4 @@ class Firestore {
                 Log.e("Firestore", "Error getting document", e)
             }
     }
-
-    private fun getCurrentUserId(): String = FirebaseAuth.getInstance().currentUser!!.uid
 }

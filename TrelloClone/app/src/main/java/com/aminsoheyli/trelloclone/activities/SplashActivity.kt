@@ -3,12 +3,12 @@ package com.aminsoheyli.trelloclone.activities
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.trelloclone.databinding.ActivitySplashBinding
+import com.aminsoheyli.trelloclone.firebase.Firestore
 
 
 class SplashActivity : AppCompatActivity() {
@@ -20,7 +20,11 @@ class SplashActivity : AppCompatActivity() {
         initUi()
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
+            val currentUserId = Firestore.getCurrentUserId()
+            if (currentUserId.isNotEmpty())
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            else
+                startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
             finish()
         }, 2000)
     }
