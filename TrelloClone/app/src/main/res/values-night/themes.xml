@@ -14,7 +14,12 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ThemeNoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="ThemeNoActionBar" parent="android:Theme.Holo.NoActionBar.Fullscreen">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ThemeNoActionBarSignUpSignIn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
