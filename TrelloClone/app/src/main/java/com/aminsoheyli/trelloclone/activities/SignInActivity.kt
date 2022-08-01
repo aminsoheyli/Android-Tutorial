@@ -1,10 +1,10 @@
-package com.aminsoheyli.trelloclone
+package com.aminsoheyli.trelloclone.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
+import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivitySignInBinding
-import com.aminsoheyli.trelloclone.databinding.ActivitySignUpBinding
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding

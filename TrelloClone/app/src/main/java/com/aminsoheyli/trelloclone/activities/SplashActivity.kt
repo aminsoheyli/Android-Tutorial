@@ -1,4 +1,4 @@
-package com.aminsoheyli.trelloclone
+package com.aminsoheyli.trelloclone.activities
 
 import android.content.Intent
 import android.graphics.Typeface
