@@ -7,6 +7,8 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivitySignInBinding
+import com.aminsoheyli.trelloclone.firebase.Firestore
+import com.aminsoheyli.trelloclone.models.User
 import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : BaseActivity() {
@@ -48,13 +50,10 @@ class SignInActivity : BaseActivity() {
             showProgressDialog(resources.getString(R.string.please_wait))
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
-                    hideProgressDialog()
-                    if (task.isSuccessful) {
-                        Toast.makeText(
-                            this, "You have successfully signed in.", Toast.LENGTH_LONG
-                        ).show()
-                        startActivity(Intent(this, MainActivity::class.java))
-                    } else {
+                    if (task.isSuccessful)
+                        Firestore().signInUser(onUserSignInSuccess)
+                    else {
+                        hideProgressDialog()
                         task.exception?.printStackTrace()
                         Toast.makeText(
                             baseContext, task.exception!!.message, Toast.LENGTH_SHORT
@@ -62,6 +61,12 @@ class SignInActivity : BaseActivity() {
                     }
                 }
         }
+    }
+
+    private val onUserSignInSuccess: (User) -> Unit = { user ->
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun validateForm(email: String, password: String): Boolean {

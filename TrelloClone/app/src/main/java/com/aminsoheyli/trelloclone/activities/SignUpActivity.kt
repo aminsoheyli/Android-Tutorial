@@ -6,6 +6,8 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivitySignUpBinding
+import com.aminsoheyli.trelloclone.firebase.Firestore
+import com.aminsoheyli.trelloclone.models.User
 import com.google.firebase.auth.FirebaseAuth
 
 class SignUpActivity : BaseActivity() {
@@ -48,23 +50,28 @@ class SignUpActivity : BaseActivity() {
             showProgressDialog(resources.getString(R.string.please_wait))
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    hideProgressDialog()
                     if (task.isSuccessful) {
-                        val firebaseUser = task.result.user
-                        val registeredEmail = firebaseUser?.email
-                        Toast.makeText(
-                            this,
-                            "$name you have successfully registered the email address",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        auth.signOut()
-                        finish()
-                    } else
+                        val firebaseUser = task.result.user!!
+                        val registeredEmail = firebaseUser.email!!
+                        val user = User(firebaseUser.uid, name, registeredEmail)
+                        Firestore().registerUser(user, onUserRegistrationSuccess)
+                    } else{
+                        hideProgressDialog()
                         Toast.makeText(
                             this@SignUpActivity, "Registration failed", Toast.LENGTH_SHORT
                         ).show()
+                    }
                 }
         }
+    }
+
+    private val onUserRegistrationSuccess = {
+        hideProgressDialog()
+        Toast.makeText(
+            this, "You have successfully registered", Toast.LENGTH_SHORT
+        ).show()
+        auth.signOut()
+        finish()
     }
 
     private fun validateForm(name: String, email: String, password: String): Boolean {
