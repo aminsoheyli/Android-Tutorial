@@ -1,11 +1,23 @@
 package com.aminsoheyli.trelloclone
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.aminsoheyli.trelloclone.databinding.ActivityIntroBinding
+import com.aminsoheyli.trelloclone.databinding.ActivitySignUpBinding
 
 class IntroActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityIntroBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+        binding = ActivityIntroBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initUi()
+    }
+
+    private fun initUi() {
+        binding.btnSignUp.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
+        }
     }
 }

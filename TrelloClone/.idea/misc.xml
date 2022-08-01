@@ -5,12 +5,15 @@
       <map>
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable-mdpi/shape_button_white_border_color_rounded.xml" value="0.2205" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable/fes.xml" value="0.24" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable/ic_black_color_back_24dp.xml" value="0.24" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable/shape_button_gradient_color_rounded.xml" value="0.24" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable/shape_button_rounded.xml" value="0.2205" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable/shape_button_white_border_color_rounded.xml" value="0.24" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/drawable/shape_button_white_color_with_border_rounded.xml" value="0.24" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout-v23/activity_intro.xml" value="0.346875" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_intro.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_main.xml" value="0.15572916666666667" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_sign_up.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_splash.xml" value="0.34791666666666665" />
       </map>
     </option>
