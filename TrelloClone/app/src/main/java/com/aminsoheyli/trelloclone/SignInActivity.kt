@@ -3,20 +3,21 @@ package com.aminsoheyli.trelloclone
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
+import com.aminsoheyli.trelloclone.databinding.ActivitySignInBinding
 import com.aminsoheyli.trelloclone.databinding.ActivitySignUpBinding
 
-class SignUpActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySignUpBinding
+class SignInActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySignInBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUi()
     }
 
     private fun initUi() {
         setupActionBar()
-        binding.toolbarSignUpActivity.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarSignInActivity.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun setupActionBar() {
@@ -24,11 +25,12 @@ class SignUpActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        setSupportActionBar(binding.toolbarSignUpActivity)
+        setSupportActionBar(binding.toolbarSignInActivity)
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_black_color_back_24dp)
         }
+        binding.toolbarSignInActivity.setNavigationOnClickListener { onBackPressed() }
     }
 }
