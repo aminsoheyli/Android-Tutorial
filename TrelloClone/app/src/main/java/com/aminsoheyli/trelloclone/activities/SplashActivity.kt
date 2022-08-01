@@ -4,9 +4,12 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.aminsoheyli.trelloclone.databinding.ActivitySplashBinding
+
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
@@ -16,14 +19,10 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
         initUi()
 
-        val counter = object : CountDownTimer(2500, 1000) {
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
-                finish()
-            }
-        }
-        counter.start()
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
+            finish()
+        }, 2000)
     }
 
     private fun initUi() {

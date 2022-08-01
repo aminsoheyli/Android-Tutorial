@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.aminsoheyli.trelloclone.databinding.ActivityIntroBinding
 
-class IntroActivity : BaseActivity() {
+class IntroActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIntroBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
