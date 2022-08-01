@@ -7,15 +7,17 @@ import android.widget.Toast
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 
 class SignUpActivity : BaseActivity() {
     private lateinit var binding: ActivitySignUpBinding
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUi()
+        auth = FirebaseAuth.getInstance()
     }
 
     private fun initUi() {
@@ -38,28 +40,28 @@ class SignUpActivity : BaseActivity() {
     }
 
     private fun registerUser() {
-        val name: String = binding.etName.text.toString().trim { it <= ' ' }
-        val email: String = binding.etEmail.text.toString().trim { it <= ' ' }
-        val password: String = binding.etEmail.text.toString().trim { it <= ' ' }
+        val name = binding.etName.text.toString().trim { it <= ' ' }
+        val email = binding.etEmail.text.toString().trim { it <= ' ' }
+        val password = binding.etPassword.text.toString().trim { it <= ' ' }
 
         if (validateForm(name, email, password)) {
-            // Show the progress dialog.
             showProgressDialog(resources.getString(R.string.please_wait))
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
+                    hideProgressDialog()
                     if (task.isSuccessful) {
-                        val firebaseUser: FirebaseUser = task.result.user!!
-                        val registeredEmail = firebaseUser.email!!
+                        val firebaseUser = task.result.user
+                        val registeredEmail = firebaseUser?.email
                         Toast.makeText(
                             this,
                             "$name you have successfully registered the email address",
                             Toast.LENGTH_SHORT
                         ).show()
-                        FirebaseAuth.getInstance().signOut()
+                        auth.signOut()
                         finish()
                     } else
                         Toast.makeText(
-                            this@SignUpActivity, task.exception?.message, Toast.LENGTH_SHORT
+                            this@SignUpActivity, "Registration failed", Toast.LENGTH_SHORT
                         ).show()
                 }
         }
