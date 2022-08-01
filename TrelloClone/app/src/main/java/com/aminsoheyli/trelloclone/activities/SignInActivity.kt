@@ -1,12 +1,11 @@
 package com.aminsoheyli.trelloclone.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivitySignInBinding
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : BaseActivity() {
     private lateinit var binding: ActivitySignInBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
