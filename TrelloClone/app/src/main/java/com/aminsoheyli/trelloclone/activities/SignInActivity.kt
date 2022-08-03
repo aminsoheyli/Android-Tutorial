@@ -15,12 +15,6 @@ class SignInActivity : BaseActivity() {
     private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
 
-    companion object {
-        const val KEY_USER = "user"
-        const val TAG = "SignInLogTag"
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
@@ -43,7 +37,7 @@ class SignInActivity : BaseActivity() {
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_black_color_back_24dp)
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back_black_color_24dp)
         }
         binding.toolbarSignInActivity.setNavigationOnClickListener { onBackPressed() }
     }
@@ -56,7 +50,7 @@ class SignInActivity : BaseActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful)
-                        Firestore().signInUser(this)
+                        Firestore().loadUserData(this)
                     else {
                         hideProgressDialog()
                         task.exception?.printStackTrace()
@@ -70,9 +64,7 @@ class SignInActivity : BaseActivity() {
 
     fun onUserSignInSuccess(user: User) {
         hideProgressDialog()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(KEY_USER, user)
-        startActivity(intent)
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 

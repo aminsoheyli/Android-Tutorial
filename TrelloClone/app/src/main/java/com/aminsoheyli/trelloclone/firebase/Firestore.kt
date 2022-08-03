@@ -1,10 +1,7 @@
 package com.aminsoheyli.trelloclone.firebase
 
 import android.util.Log
-import com.aminsoheyli.trelloclone.activities.BaseActivity
-import com.aminsoheyli.trelloclone.activities.MainActivity
-import com.aminsoheyli.trelloclone.activities.SignInActivity
-import com.aminsoheyli.trelloclone.activities.SignUpActivity
+import com.aminsoheyli.trelloclone.activities.*
 import com.aminsoheyli.trelloclone.models.User
 import com.aminsoheyli.trelloclone.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -31,7 +28,7 @@ class Firestore {
             }
     }
 
-    fun signInUser(activity: BaseActivity) {
+    fun loadUserData(activity: BaseActivity) {
         firestore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
@@ -40,6 +37,7 @@ class Firestore {
                 when (activity) {
                     is SignInActivity -> activity.onUserSignInSuccess(loggedInUser)
                     is MainActivity -> activity.updateNavigationUserDetails(loggedInUser)
+                    is MyProfileActivity -> activity.setUserDataInUi(loggedInUser)
                 }
             }.addOnFailureListener { e ->
                 activity.hideProgressDialog()

@@ -14,18 +14,21 @@
         android:theme="@style/Theme.TrelloClone"
         tools:targetApi="31">
         <activity
-            android:name=".activities.BaseActivity"
-            android:exported="false" />
+            android:name=".activities.MyProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar" />
+
         <activity
             android:name=".activities.SignInActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBarSignUpSignIn" />
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar" />
         <activity
             android:name=".activities.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBarSignUpSignIn" />
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar" />
         <activity
             android:name=".activities.IntroActivity"
             android:exported="false"
@@ -37,10 +40,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
+            android:name=".activities.BaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBar">
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

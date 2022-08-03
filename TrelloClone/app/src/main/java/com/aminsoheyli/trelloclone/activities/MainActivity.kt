@@ -3,7 +3,6 @@ package com.aminsoheyli.trelloclone.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivityMainBinding
@@ -26,11 +25,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun setupFirebase() {
-        val user = intent.getParcelableExtra<User>(SignInActivity.KEY_USER)
-        if (user != null)
-            updateNavigationUserDetails(user)
-        else
-            Firestore().signInUser(this)
+        Firestore().loadUserData(this)
     }
 
     private fun initUi() {
@@ -58,7 +53,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_my_profile -> Toast.makeText(this, "My Profile", Toast.LENGTH_SHORT).show()
+            R.id.nav_my_profile -> startActivity(Intent(this, MyProfileActivity::class.java))
             R.id.nav_sign_out -> {
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, IntroActivity::class.java)

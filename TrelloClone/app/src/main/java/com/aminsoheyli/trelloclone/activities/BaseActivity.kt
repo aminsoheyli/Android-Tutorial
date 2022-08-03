@@ -23,6 +23,7 @@ open class BaseActivity : AppCompatActivity() {
     fun showProgressDialog(text: String) {
         val dialogBinding = DialogProgressBinding.inflate(layoutInflater)
         progressDialog = Dialog(this@BaseActivity)
+        progressDialog.setCancelable(false)
         progressDialog.setContentView(dialogBinding.root)
         dialogBinding.tvProgressText.text = text
         progressDialog.show()
