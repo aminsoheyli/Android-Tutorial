@@ -19,7 +19,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.AppCompat.MaterialComponents.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="Theme.AppCompat.MaterialComponents.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
