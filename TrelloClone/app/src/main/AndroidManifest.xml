@@ -33,12 +33,12 @@
             android:name=".activities.IntroActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBar" />
+            android:theme="@style/Theme.NoActionBar" />
         <activity
             android:name=".activities.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.NoActionBar" />
         <activity
             android:name=".activities.BaseActivity"
             android:exported="false" />
