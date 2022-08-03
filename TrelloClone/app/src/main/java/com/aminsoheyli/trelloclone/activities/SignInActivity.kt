@@ -16,6 +16,10 @@ class SignInActivity : BaseActivity() {
     private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
 
+    companion object {
+        const val KEY_USER = "user"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
@@ -51,21 +55,23 @@ class SignInActivity : BaseActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful)
-                        Firestore().signInUser(onUserSignInSuccess)
+                        Firestore().signInUser(this)
                     else {
                         hideProgressDialog()
                         task.exception?.printStackTrace()
                         Toast.makeText(
-                            baseContext, task.exception!!.message, Toast.LENGTH_SHORT
+                            baseContext, "Username/Password is incorrect", Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
         }
     }
 
-    private val onUserSignInSuccess: (User) -> Unit = { user ->
+    fun onUserSignInSuccess(user: User) {
         hideProgressDialog()
-        startActivity(Intent(this, MainActivity::class.java))
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(KEY_USER, user)
+        startActivity(intent)
         finish()
     }
 

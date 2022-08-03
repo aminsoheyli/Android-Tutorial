@@ -1,11 +1,11 @@
 package com.aminsoheyli.trelloclone.activities
 
 import android.app.Dialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.DialogProgressBinding
@@ -23,7 +23,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showProgressDialog(text: String) {
         val dialogBinding = DialogProgressBinding.inflate(layoutInflater)
-        progressDialog = Dialog(this)
+        progressDialog = Dialog(this@BaseActivity)
         progressDialog.setContentView(dialogBinding.root)
         dialogBinding.tvProgressText.text = text
         progressDialog.show()

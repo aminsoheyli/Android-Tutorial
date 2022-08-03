@@ -54,8 +54,8 @@ class SignUpActivity : BaseActivity() {
                         val firebaseUser = task.result.user!!
                         val registeredEmail = firebaseUser.email!!
                         val user = User(firebaseUser.uid, name, registeredEmail)
-                        Firestore().registerUser(user, onUserRegistrationSuccess)
-                    } else{
+                        Firestore().registerUser(user, this)
+                    } else {
                         hideProgressDialog()
                         Toast.makeText(
                             this@SignUpActivity, "Registration failed", Toast.LENGTH_SHORT
@@ -65,7 +65,7 @@ class SignUpActivity : BaseActivity() {
         }
     }
 
-    private val onUserRegistrationSuccess = {
+    fun onUserRegistrationSuccess() {
         hideProgressDialog()
         Toast.makeText(
             this, "You have successfully registered", Toast.LENGTH_SHORT

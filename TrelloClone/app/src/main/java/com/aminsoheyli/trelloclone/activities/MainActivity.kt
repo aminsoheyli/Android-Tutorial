@@ -7,21 +7,36 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivityMainBinding
+import com.aminsoheyli.trelloclone.databinding.NavHeaderMainBinding
+import com.aminsoheyli.trelloclone.firebase.Firestore
+import com.aminsoheyli.trelloclone.models.User
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navHeaderBinding: NavHeaderMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUi()
+        setupFirebase()
+    }
+
+    private fun setupFirebase() {
+        val user = intent.getParcelableExtra<User>(SignInActivity.KEY_USER)
+        if (user != null)
+            updateNavigationUserDetails(user)
+        else
+            Firestore().signInUser(this)
     }
 
     private fun initUi() {
         setupActionBar()
         binding.navView.setNavigationItemSelectedListener(this)
+        navHeaderBinding = NavHeaderMainBinding.bind(binding.navView.getHeaderView(0))
     }
 
     private fun setupActionBar() {
@@ -54,5 +69,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun updateNavigationUserDetails(user: User) {
+        navHeaderBinding.tvUsername.text = user.name
+        Glide.with(this)
+            .load(user.image)
+            .centerCrop()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(navHeaderBinding.ivUserImage)
     }
 }
