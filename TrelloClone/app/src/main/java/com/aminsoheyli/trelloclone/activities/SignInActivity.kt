@@ -12,12 +12,13 @@ import com.aminsoheyli.trelloclone.models.User
 import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : BaseActivity() {
-    private val TAG = "SignInLogTag"
     private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
 
     companion object {
         const val KEY_USER = "user"
+        const val TAG = "SignInLogTag"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
