@@ -1,7 +1,9 @@
 package com.aminsoheyli.trelloclone.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import com.aminsoheyli.trelloclone.R
@@ -14,6 +16,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+    companion object {
+        const val REQUEST_CODE_MY_PROFILE = 1
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHeaderBinding: NavHeaderMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +59,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_my_profile -> startActivity(Intent(this, MyProfileActivity::class.java))
+            R.id.nav_my_profile -> startActivityForResult(
+                Intent(
+                    this,
+                    MyProfileActivity::class.java
+                ), REQUEST_CODE_MY_PROFILE
+            )
             R.id.nav_sign_out -> {
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, IntroActivity::class.java)
@@ -73,5 +84,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .centerCrop()
             .placeholder(R.drawable.ic_user_place_holder)
             .into(navHeaderBinding.ivUserImage)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_MY_PROFILE)
+            Firestore().loadUserData(this@MainActivity)
+        else
+            Log.e(this.localClassName + "/Canceled", "Cancelled")
     }
 }
