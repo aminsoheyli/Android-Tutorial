@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -15,11 +16,15 @@ import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.User
 import com.aminsoheyli.trelloclone.utils.Constants
 import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.IOException
 
 class MyProfileActivity : BaseActivity() {
     private lateinit var binding: ActivityMyProfileBinding
-    private lateinit var selectedImageFileUri: Uri
+    private var selectedImageFileUri: Uri? = null
+    private lateinit var profileImageURL: String
+    private lateinit var userDetails: User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyProfileBinding.inflate(layoutInflater)
@@ -47,7 +52,15 @@ class MyProfileActivity : BaseActivity() {
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     Constants.PERMISSION_CODE_READ_STORAGE
                 )
+        }
 
+        binding.btnUpdate.setOnClickListener {
+            if (selectedImageFileUri != null)
+                uploadUserImage()
+            else{
+                showProgressDialog(resources.getString(R.string.please_wait))
+                updateUserProfileData()
+            }
         }
     }
 
@@ -102,7 +115,57 @@ class MyProfileActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
+    private fun uploadUserImage() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
+            "USER_IMAGE" + System.currentTimeMillis() + "."
+                    + Constants.getFileExtension(this@MyProfileActivity, selectedImageFileUri!!)
+        )
+        sRef.putFile(selectedImageFileUri!!)
+            .addOnSuccessListener { taskSnapshot ->
+                Log.e(
+                    "Firebase Image URL", taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
+                )
+                taskSnapshot.metadata!!.reference!!.downloadUrl
+                    .addOnSuccessListener { uri ->
+                        Log.e("Downloadable Image URL", uri.toString())
+                        profileImageURL = uri.toString()
+                        updateUserProfileData()
+                    }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this@MyProfileActivity, exception.message, Toast.LENGTH_LONG).show()
+                uploadUserImage()
+            }
+    }
+
+    fun onProfileUpdateSuccess() {
+        hideProgressDialog()
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    private fun updateUserProfileData() {
+        var isAnyFieldChanged = false
+        val userHashMap = HashMap<String, Any>()
+        if (binding.etName.text.toString() != userDetails.name) {
+            userHashMap[Constants.User.NAME] = binding.etName.text.toString()
+            isAnyFieldChanged = true
+        }
+        if (binding.etMobile.text.toString() != userDetails.mobile.toString()) {
+            userHashMap[Constants.User.MOBILE] = binding.etMobile.text.toString().toLong()
+            isAnyFieldChanged = true
+        }
+        if (profileImageURL.isNotEmpty() && profileImageURL != userDetails.image) {
+            userHashMap[Constants.User.IMAGE] = profileImageURL
+            isAnyFieldChanged = true
+        }
+        if (isAnyFieldChanged)
+            Firestore().updateUserProfileData(this@MyProfileActivity, userHashMap)
+    }
+
     fun setUserDataInUi(user: User) {
+        userDetails = user
         Glide.with(this)
             .load(user.image)
             .centerCrop()
