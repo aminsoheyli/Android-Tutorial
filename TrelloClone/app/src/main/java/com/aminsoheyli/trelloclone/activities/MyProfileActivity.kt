@@ -23,7 +23,7 @@ import java.io.IOException
 class MyProfileActivity : BaseActivity() {
     private lateinit var binding: ActivityMyProfileBinding
     private var selectedImageFileUri: Uri? = null
-    private lateinit var profileImageURL: String
+    private var profileImageURL: String = ""
     private lateinit var userDetails: User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
