@@ -175,7 +175,7 @@ class MyProfileActivity : BaseActivity() {
         binding.etName.setText(user.name)
         binding.etEmail.setText(user.email)
         if (user.mobile != 0L) {
-            binding.etEmail.setText(user.mobile.toString())
+            binding.etMobile.setText(user.mobile.toString())
         }
     }
 }
