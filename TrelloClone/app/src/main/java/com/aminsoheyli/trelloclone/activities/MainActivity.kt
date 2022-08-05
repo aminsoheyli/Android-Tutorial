@@ -38,6 +38,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupActionBar()
         binding.navView.setNavigationItemSelectedListener(this)
         navHeaderBinding = NavHeaderMainBinding.bind(binding.navView.getHeaderView(0))
+        binding.content.fabCreateBoard.setOnClickListener {
+            startActivity(Intent(this, CreateBoardActivity::class.java))
+        }
     }
 
     private fun setupActionBar() {
