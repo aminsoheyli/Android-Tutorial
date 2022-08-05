@@ -20,12 +20,12 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    fun showProgressDialog(text: String) {
+    fun showProgressDialog() {
         val dialogBinding = DialogProgressBinding.inflate(layoutInflater)
         progressDialog = Dialog(this@BaseActivity)
         progressDialog.setCancelable(false)
         progressDialog.setContentView(dialogBinding.root)
-        dialogBinding.tvProgressText.text = text
+        dialogBinding.tvProgressText.text = resources.getString(R.string.please_wait)
         progressDialog.show()
     }
 

@@ -11,6 +11,7 @@ import com.aminsoheyli.trelloclone.databinding.ActivityMainBinding
 import com.aminsoheyli.trelloclone.databinding.NavHeaderMainBinding
 import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.User
+import com.aminsoheyli.trelloclone.utils.Constants
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -22,12 +23,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHeaderBinding: NavHeaderMainBinding
+    private lateinit var username: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initUi()
         setupFirebase()
+        initUi()
     }
 
     private fun setupFirebase() {
@@ -39,7 +41,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.navView.setNavigationItemSelectedListener(this)
         navHeaderBinding = NavHeaderMainBinding.bind(binding.navView.getHeaderView(0))
         binding.content.fabCreateBoard.setOnClickListener {
-            startActivity(Intent(this, CreateBoardActivity::class.java))
+            val intent = Intent(this, CreateBoardActivity::class.java)
+            intent.putExtra(Constants.User.NAME, username)
+            startActivity(intent)
         }
     }
 
@@ -81,7 +85,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     fun updateNavigationUserDetails(user: User) {
-        navHeaderBinding.tvUsername.text = user.name
+        username = user.name
+        navHeaderBinding.tvUsername.text = username
         Glide.with(this)
             .load(user.image)
             .centerCrop()

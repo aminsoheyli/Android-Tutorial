@@ -47,7 +47,7 @@ class SignUpActivity : BaseActivity() {
         val password = binding.etPassword.text.toString().trim { it <= ' ' }
 
         if (validateForm(name, email, password)) {
-            showProgressDialog(resources.getString(R.string.please_wait))
+            showProgressDialog()
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {

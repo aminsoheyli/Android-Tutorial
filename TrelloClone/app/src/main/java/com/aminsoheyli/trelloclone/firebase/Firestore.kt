@@ -3,6 +3,7 @@ package com.aminsoheyli.trelloclone.firebase
 import android.util.Log
 import android.widget.Toast
 import com.aminsoheyli.trelloclone.activities.*
+import com.aminsoheyli.trelloclone.models.Board
 import com.aminsoheyli.trelloclone.models.User
 import com.aminsoheyli.trelloclone.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -46,6 +47,17 @@ class Firestore {
             }
     }
 
+    fun createBoard(board: Board, activity: CreateBoardActivity) {
+        firestore.collection(Constants.BOARDS)
+            .document()
+            .set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                activity.onBoardCreatedSuccessfully()
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
 
     fun updateUserProfileData(activity: MyProfileActivity, userHashMap: HashMap<String, Any>) {
         firestore.collection(Constants.USERS)

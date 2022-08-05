@@ -58,7 +58,7 @@ class MyProfileActivity : BaseActivity() {
             if (selectedImageFileUri != null)
                 uploadUserImage()
             else{
-                showProgressDialog(resources.getString(R.string.please_wait))
+                showProgressDialog()
                 updateUserProfileData()
             }
         }
@@ -116,7 +116,7 @@ class MyProfileActivity : BaseActivity() {
     }
 
     private fun uploadUserImage() {
-        showProgressDialog(resources.getString(R.string.please_wait))
+        showProgressDialog()
         val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
             "USER_IMAGE" + System.currentTimeMillis() + "."
                     + Constants.getFileExtension(this@MyProfileActivity, selectedImageFileUri!!)
@@ -135,7 +135,7 @@ class MyProfileActivity : BaseActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this@MyProfileActivity, exception.message, Toast.LENGTH_LONG).show()
-                uploadUserImage()
+                hideProgressDialog()
             }
     }
 
