@@ -10,20 +10,19 @@ import com.aminsoheyli.trelloclone.models.Board
 import com.bumptech.glide.Glide
 
 open class BoardItemsAdapter(
-    private val context: Context,
-    private var list: ArrayList<Board>
-) : RecyclerView.Adapter<BoardItemsAdapter.MyViewHolder>() {
+    private val context: Context, private var list: ArrayList<Board>
+) : RecyclerView.Adapter<BoardItemsAdapter.ViewHolder>() {
     private var onClickListener: OnClickListener? = null
 
-    class MyViewHolder(val binding: ItemBoardBinding) :
+    class ViewHolder(val binding: ItemBoardBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemBoardBinding.inflate(LayoutInflater.from(context), parent, false)
-        return MyViewHolder(binding)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             val model = list[position]
             Glide
