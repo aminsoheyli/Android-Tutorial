@@ -9,6 +9,13 @@ import android.webkit.MimeTypeMap
 object Constants {
     const val USERS = "users"
     const val BOARDS = "boards"
+
+    object Task{
+        const val ASSIGNED_TO = "assignedTo"
+        const val DOCUMENT_ID = "documentId"
+        const val TASK_LIST = "taskList"
+    }
+
     object User{
         const val IMAGE = "image"
         const val NAME = "name"

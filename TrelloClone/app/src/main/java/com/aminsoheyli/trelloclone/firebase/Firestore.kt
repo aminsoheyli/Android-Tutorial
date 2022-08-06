@@ -7,6 +7,7 @@ import com.aminsoheyli.trelloclone.models.Board
 import com.aminsoheyli.trelloclone.models.User
 import com.aminsoheyli.trelloclone.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,7 +31,7 @@ class Firestore {
             }
     }
 
-    fun loadUserData(activity: BaseActivity) {
+    fun loadUserData(activity: BaseActivity, readBoardsList: Boolean = false) {
         firestore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
@@ -38,7 +39,10 @@ class Firestore {
                 val loggedInUser = document.toObject(User::class.java)!!
                 when (activity) {
                     is SignInActivity -> activity.onUserSignInSuccess(loggedInUser)
-                    is MainActivity -> activity.updateNavigationUserDetails(loggedInUser)
+                    is MainActivity -> activity.updateNavigationUserDetails(
+                        loggedInUser,
+                        readBoardsList
+                    )
                     is MyProfileActivity -> activity.setUserDataInUi(loggedInUser)
                 }
             }.addOnFailureListener { e ->
@@ -69,6 +73,19 @@ class Firestore {
                 activity.onProfileUpdateSuccess()
             }
             .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
+
+    fun getBoardsList(activity: MainActivity, onSuccess: (document: QuerySnapshot) -> Unit) {
+        firestore.collection(Constants.BOARDS)
+            .whereArrayContains(Constants.Task.ASSIGNED_TO, getCurrentUserId())
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(activity.javaClass.simpleName, document.documents.toString())
+                onSuccess(document)
+            }.addOnFailureListener { e ->
                 activity.hideProgressDialog()
                 Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
             }
