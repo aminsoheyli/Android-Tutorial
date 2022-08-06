@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivityMainBinding
 import com.aminsoheyli.trelloclone.databinding.NavHeaderMainBinding
@@ -55,11 +56,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         hideProgressDialog()
         with(binding.content.mainContent) {
             if (boardsList.size > 0) {
-                val boardItemsAdapter = BoardItemsAdapter(this@MainActivity, boardsList)
                 tvNoBoardsAvailable.visibility = View.GONE
+                val boardItemsAdapter = BoardItemsAdapter(this@MainActivity, boardsList)
                 rvBoardsList.apply {
                     visibility = View.VISIBLE
                     setHasFixedSize(true)
+                    layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
                     adapter = boardItemsAdapter
                 }
             } else {
