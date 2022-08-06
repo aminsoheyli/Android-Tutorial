@@ -10,17 +10,13 @@ object Constants {
     const val USERS = "users"
     const val BOARDS = "boards"
 
-    object Task{
-        const val ASSIGNED_TO = "assignedTo"
-        const val DOCUMENT_ID = "documentId"
-        const val TASK_LIST = "taskList"
-    }
+    const val ASSIGNED_TO = "assignedTo"
+    const val DOCUMENT_ID = "documentId"
+    const val TASK_LIST = "taskList"
 
-    object User{
-        const val IMAGE = "image"
-        const val NAME = "name"
-        const val MOBILE = "mobile"
-    }
+    const val IMAGE = "image"
+    const val NAME = "name"
+    const val MOBILE = "mobile"
 
     const val PERMISSION_CODE_READ_STORAGE = 1
     const val REQUEST_CODE_PICK_IMAGE = 2

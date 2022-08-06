@@ -36,8 +36,8 @@ class CreateBoardActivity : BaseActivity() {
 
     private fun initUi() {
         setupActionBar()
-        if (intent.hasExtra(Constants.User.NAME))
-            username = intent.getStringExtra(Constants.User.NAME).toString()
+        if (intent.hasExtra(Constants.NAME))
+            username = intent.getStringExtra(Constants.NAME).toString()
         binding.ivBoardImage.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this,

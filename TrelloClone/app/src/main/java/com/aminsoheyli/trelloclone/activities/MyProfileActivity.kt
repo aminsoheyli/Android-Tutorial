@@ -149,15 +149,15 @@ class MyProfileActivity : BaseActivity() {
         var isAnyFieldChanged = false
         val userHashMap = HashMap<String, Any>()
         if (binding.etName.text.toString() != userDetails.name) {
-            userHashMap[Constants.User.NAME] = binding.etName.text.toString()
+            userHashMap[Constants.NAME] = binding.etName.text.toString()
             isAnyFieldChanged = true
         }
         if (binding.etMobile.text.toString() != userDetails.mobile.toString()) {
-            userHashMap[Constants.User.MOBILE] = binding.etMobile.text.toString().toLong()
+            userHashMap[Constants.MOBILE] = binding.etMobile.text.toString().toLong()
             isAnyFieldChanged = true
         }
         if (profileImageURL.isNotEmpty() && profileImageURL != userDetails.image) {
-            userHashMap[Constants.User.IMAGE] = profileImageURL
+            userHashMap[Constants.IMAGE] = profileImageURL
             isAnyFieldChanged = true
         }
         if (isAnyFieldChanged)

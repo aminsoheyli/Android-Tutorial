@@ -51,6 +51,21 @@ class Firestore {
             }
     }
 
+    fun getBoardDetails(activity: TaskListActivity, documentId: String) {
+        firestore.collection(Constants.BOARDS)
+            .document(documentId)
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(activity.javaClass.simpleName, document.toString())
+                val board = document.toObject(Board::class.java)!!
+                board.documentId = document.id
+                activity.boardDetails(board)
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
+
     fun createBoard(board: Board, activity: CreateBoardActivity) {
         firestore.collection(Constants.BOARDS)
             .document()
@@ -80,7 +95,7 @@ class Firestore {
 
     fun getBoardsList(activity: MainActivity, onSuccess: (document: QuerySnapshot) -> Unit) {
         firestore.collection(Constants.BOARDS)
-            .whereArrayContains(Constants.Task.ASSIGNED_TO, getCurrentUserId())
+            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserId())
             .get()
             .addOnSuccessListener { document ->
                 Log.e(activity.javaClass.simpleName, document.documents.toString())

@@ -47,7 +47,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         navHeaderBinding = NavHeaderMainBinding.bind(binding.navView.getHeaderView(0))
         binding.content.fabCreateBoard.setOnClickListener {
             val intent = Intent(this, CreateBoardActivity::class.java)
-            intent.putExtra(Constants.User.NAME, username)
+            intent.putExtra(Constants.NAME, username)
             startActivityForResult(intent, REQUEST_CODE_CREATE_BOARD)
         }
     }
@@ -60,7 +60,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 val boardItemsAdapter = BoardItemsAdapter(this@MainActivity, boardsList)
                 boardItemsAdapter.setOnClickListener(object : BoardItemsAdapter.OnClickListener {
                     override fun onClick(position: Int, model: Board) {
-                        startActivity(Intent(this@MainActivity, TaskListActivity::class.java))
+                        val intent = Intent(this@MainActivity, TaskListActivity::class.java)
+                        intent.putExtra(Constants.DOCUMENT_ID, model.documentId)
+                        startActivity(intent)
                     }
                 })
                 rvBoardsList.apply {
