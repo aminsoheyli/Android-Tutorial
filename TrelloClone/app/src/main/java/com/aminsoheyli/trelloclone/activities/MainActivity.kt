@@ -58,10 +58,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             if (boardsList.size > 0) {
                 tvNoBoardsAvailable.visibility = View.GONE
                 val boardItemsAdapter = BoardItemsAdapter(this@MainActivity, boardsList)
+                boardItemsAdapter.setOnClickListener(object : BoardItemsAdapter.OnClickListener {
+                    override fun onClick(position: Int, model: Board) {
+                        startActivity(Intent(this@MainActivity, TaskListActivity::class.java))
+                    }
+                })
                 rvBoardsList.apply {
                     visibility = View.VISIBLE
                     setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+                    layoutManager =
+                        LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
                     adapter = boardItemsAdapter
                 }
             } else {

@@ -18,6 +18,11 @@
         android:theme="@style/Theme.TrelloClone"
         tools:targetApi="31">
         <activity
+            android:name=".activities.TaskListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar" />
+        <activity
             android:name=".activities.CreateBoardActivity"
             android:exported="false"
             android:screenOrientation="portrait"
