@@ -3,7 +3,6 @@ package com.aminsoheyli.trelloclone.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.GravityCompat
@@ -17,11 +16,13 @@ import com.aminsoheyli.trelloclone.utils.Constants
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.QuerySnapshot
 import com.projemanag.adapters.BoardItemsAdapter
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     companion object {
         const val REQUEST_CODE_MY_PROFILE = 1
+        const val REQUEST_CODE_CREATE_BOARD = 2
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -46,7 +47,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.content.fabCreateBoard.setOnClickListener {
             val intent = Intent(this, CreateBoardActivity::class.java)
             intent.putExtra(Constants.User.NAME, username)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_CREATE_BOARD)
         }
     }
 
@@ -115,23 +116,26 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(navHeaderBinding.ivUserImage)
         if (readBoardsList) {
             showProgressDialog()
-            Firestore().getBoardsList(this) { document ->
-                val boardsList: ArrayList<Board> = ArrayList()
-                for (item in document.documents) {
-                    val board = item.toObject(Board::class.java)!!
-                    board.documentId = item.id
-                    boardsList.add(board)
-                }
-                populateBoardsListToUI(boardsList)
-            }
+            Firestore().getBoardsList(this, onGetBoardsListSuccess)
         }
+    }
+
+    private val onGetBoardsListSuccess = { document: QuerySnapshot ->
+        val boardsList: ArrayList<Board> = ArrayList()
+        for (item in document.documents) {
+            val board = item.toObject(Board::class.java)!!
+            board.documentId = item.id
+            boardsList.add(board)
+        }
+        populateBoardsListToUI(boardsList)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_MY_PROFILE)
-            Firestore().loadUserData(this@MainActivity)
-        else
-            Log.e(this.localClassName + "/Canceled", "Cancelled")
+        if (resultCode == Activity.RESULT_OK)
+            when (requestCode) {
+                REQUEST_CODE_MY_PROFILE -> Firestore().loadUserData(this@MainActivity)
+                REQUEST_CODE_CREATE_BOARD -> Firestore().getBoardsList(this, onGetBoardsListSuccess)
+            }
     }
 }
