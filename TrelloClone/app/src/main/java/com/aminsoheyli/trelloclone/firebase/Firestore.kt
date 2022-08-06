@@ -15,13 +15,11 @@ import com.google.firebase.ktx.Firebase
 class Firestore {
     private val firestore = Firebase.firestore
 
-    companion object {
-        fun getCurrentUserId(): String = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-    }
+    fun getCurrentUserID(): String = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     fun registerUser(userInfo: User, activity: SignUpActivity) {
         firestore.collection(Constants.USERS)
-            .document(getCurrentUserId())
+            .document(getCurrentUserID())
             .set(userInfo, SetOptions.merge())
             .addOnSuccessListener {
                 activity.onUserRegistrationSuccess()
@@ -33,7 +31,7 @@ class Firestore {
 
     fun loadUserData(activity: BaseActivity, readBoardsList: Boolean = false) {
         firestore.collection(Constants.USERS)
-            .document(getCurrentUserId())
+            .document(getCurrentUserID())
             .get()
             .addOnSuccessListener { document ->
                 val loggedInUser = document.toObject(User::class.java)!!
@@ -78,9 +76,25 @@ class Firestore {
             }
     }
 
+    fun addUpdateTaskList(activity: TaskListActivity, board: Board) {
+        val taskListHashMap = HashMap<String, Any>()
+        taskListHashMap[Constants.TASK_LIST] = board.taskList
+        firestore.collection(Constants.BOARDS)
+            .document(board.documentId)
+            .update(taskListHashMap)
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "TaskList updated successfully.")
+                activity.addUpdateTaskListSuccess()
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
+
+
     fun updateUserProfileData(activity: MyProfileActivity, userHashMap: HashMap<String, Any>) {
         firestore.collection(Constants.USERS)
-            .document(getCurrentUserId())
+            .document(getCurrentUserID())
             .update(userHashMap)
             .addOnSuccessListener {
                 Log.e(activity.javaClass.simpleName, "Profile Data updated successfully!")
@@ -95,7 +109,7 @@ class Firestore {
 
     fun getBoardsList(activity: MainActivity, onSuccess: (document: QuerySnapshot) -> Unit) {
         firestore.collection(Constants.BOARDS)
-            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserId())
+            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserID())
             .get()
             .addOnSuccessListener { document ->
                 Log.e(activity.javaClass.simpleName, document.documents.toString())

@@ -6,14 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.aminsoheyli.trelloclone.activities.TaskListActivity
 import com.aminsoheyli.trelloclone.databinding.ItemTaskBinding
 import com.aminsoheyli.trelloclone.models.Task
 
-open class TaskListItemsAdapter(
+open class TaskItemsAdapter(
     private val context: Context,
     private var list: ArrayList<Task>
-) : RecyclerView.Adapter<TaskListItemsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<TaskItemsAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -29,7 +31,7 @@ open class TaskListItemsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder){
+        with(holder) {
             val model = list[position]
             if (position == list.size - 1) {
                 binding.llTaskItem.visibility = View.GONE
@@ -37,6 +39,22 @@ open class TaskListItemsAdapter(
             } else {
                 binding.tvAddTaskList.visibility = View.GONE
                 binding.llTaskItem.visibility = View.VISIBLE
+            }
+            binding.tvTaskListTitle.text = model.title
+            binding.tvAddTaskList.setOnClickListener {
+                binding.tvAddTaskList.visibility = View.GONE
+                binding.cvAddTaskListName.visibility = View.VISIBLE
+            }
+            binding.ibCloseListName.setOnClickListener {
+                binding.tvAddTaskList.visibility = View.VISIBLE
+                binding.cvAddTaskListName.visibility = View.GONE
+            }
+            binding.ibDoneListName.setOnClickListener {
+                val listName = binding.etTaskListName.text.toString()
+                if (listName.isEmpty())
+                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+                else if (context is TaskListActivity)
+                    context.createTaskList(listName)
             }
         }
     }
