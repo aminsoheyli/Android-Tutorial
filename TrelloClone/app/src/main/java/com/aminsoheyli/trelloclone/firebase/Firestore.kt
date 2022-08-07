@@ -49,6 +49,31 @@ class Firestore {
             }
     }
 
+    fun createBoard(board: Board, activity: CreateBoardActivity) {
+        firestore.collection(Constants.BOARDS)
+            .document()
+            .set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                activity.onBoardCreatedSuccessfully()
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
+
+    fun getBoardsList(activity: MainActivity, onSuccess: (document: QuerySnapshot) -> Unit) {
+        firestore.collection(Constants.BOARDS)
+            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserID())
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(activity.javaClass.simpleName, document.documents.toString())
+                onSuccess(document)
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
+
     fun getBoardDetails(activity: TaskListActivity, documentId: String) {
         firestore.collection(Constants.BOARDS)
             .document(documentId)
@@ -57,19 +82,7 @@ class Firestore {
                 Log.e(activity.javaClass.simpleName, document.toString())
                 val board = document.toObject(Board::class.java)!!
                 board.documentId = document.id
-                activity.boardDetails(board)
-            }.addOnFailureListener { e ->
-                activity.hideProgressDialog()
-                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
-            }
-    }
-
-    fun createBoard(board: Board, activity: CreateBoardActivity) {
-        firestore.collection(Constants.BOARDS)
-            .document()
-            .set(board, SetOptions.merge())
-            .addOnSuccessListener {
-                activity.onBoardCreatedSuccessfully()
+                activity.showBoardDetails(board)
             }.addOnFailureListener { e ->
                 activity.hideProgressDialog()
                 Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
@@ -91,7 +104,6 @@ class Firestore {
             }
     }
 
-
     fun updateUserProfileData(activity: MyProfileActivity, userHashMap: HashMap<String, Any>) {
         firestore.collection(Constants.USERS)
             .document(getCurrentUserID())
@@ -102,19 +114,6 @@ class Firestore {
                 activity.onProfileUpdateSuccess()
             }
             .addOnFailureListener { e ->
-                activity.hideProgressDialog()
-                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
-            }
-    }
-
-    fun getBoardsList(activity: MainActivity, onSuccess: (document: QuerySnapshot) -> Unit) {
-        firestore.collection(Constants.BOARDS)
-            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserID())
-            .get()
-            .addOnSuccessListener { document ->
-                Log.e(activity.javaClass.simpleName, document.documents.toString())
-                onSuccess(document)
-            }.addOnFailureListener { e ->
                 activity.hideProgressDialog()
                 Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
             }

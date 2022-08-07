@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aminsoheyli.trelloclone.R
+import com.aminsoheyli.trelloclone.adapters.TaskItemsAdapter
 import com.aminsoheyli.trelloclone.databinding.ActivityTaskListBinding
 import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.Board
 import com.aminsoheyli.trelloclone.models.Task
 import com.aminsoheyli.trelloclone.utils.Constants
-import com.projemanag.adapters.TaskItemsAdapter
 
 class TaskListActivity : BaseActivity() {
     private lateinit var boardDetails: Board
@@ -45,7 +45,7 @@ class TaskListActivity : BaseActivity() {
         binding.toolbarTaskListActivity.setNavigationOnClickListener { onBackPressed() }
     }
 
-    fun boardDetails(board: Board) {
+    fun showBoardDetails(board: Board) {
         boardDetails = board
         hideProgressDialog()
         setupActionBar()
@@ -64,7 +64,7 @@ class TaskListActivity : BaseActivity() {
         Firestore().getBoardDetails(this, boardDetails.documentId)
     }
 
-        fun createTaskList(taskListName: String) {
+    fun createTaskList(taskListName: String) {
         Log.e("Task List Name", taskListName)
         val task = Task(taskListName, Firestore().getCurrentUserID())
         boardDetails.taskList.add(0, task)

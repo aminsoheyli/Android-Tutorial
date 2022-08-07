@@ -8,6 +8,7 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aminsoheyli.trelloclone.R
+import com.aminsoheyli.trelloclone.adapters.BoardItemsAdapter
 import com.aminsoheyli.trelloclone.databinding.ActivityMainBinding
 import com.aminsoheyli.trelloclone.databinding.NavHeaderMainBinding
 import com.aminsoheyli.trelloclone.firebase.Firestore
@@ -18,7 +19,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.QuerySnapshot
-import com.projemanag.adapters.BoardItemsAdapter
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     companion object {

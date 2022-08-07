@@ -1,4 +1,4 @@
-package com.projemanag.adapters
+package com.aminsoheyli.trelloclone.adapters
 
 import android.content.Context
 import android.content.res.Resources
