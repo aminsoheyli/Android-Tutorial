@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.aminsoheyli.trelloclone.activities.TaskListActivity
 import com.aminsoheyli.trelloclone.databinding.ItemTaskBinding
@@ -56,10 +57,51 @@ open class TaskItemsAdapter(
                 else if (context is TaskListActivity)
                     context.createTaskList(listName)
             }
+            binding.ibEditListName.setOnClickListener {
+                binding.llTitleView.visibility = View.GONE
+                binding.etEditTaskListName.setText(model.title)
+                binding.cvEditTaskListName.visibility = View.VISIBLE
+            }
+            binding.ibCloseEditableView.setOnClickListener {
+                binding.llTitleView.visibility = View.VISIBLE
+                binding.cvEditTaskListName.visibility = View.GONE
+            }
+            binding.ibDoneEditListName.setOnClickListener {
+                val listName = binding.etEditTaskListName.text.toString()
+                if (listName.isNotEmpty()) {
+                    if (context is TaskListActivity)
+                        context.updateTaskList(position, listName, model)
+                } else
+                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+            }
+            binding.ibDeleteList.setOnClickListener {
+                alertDialogForDeleteList(
+                    position,
+                    model.title
+                )
+            }
         }
     }
 
     override fun getItemCount(): Int = list.size
+
+    private fun alertDialogForDeleteList(position: Int, title: String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Alert")
+        builder.setMessage("Are you sure you want to delete $title.")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton("Yes") { dialogInterface, which ->
+            dialogInterface.dismiss()
+            if (context is TaskListActivity)
+                context.deleteTaskList(position)
+        }
+        builder.setNegativeButton("No") { dialogInterface, which ->
+            dialogInterface.dismiss()
+        }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
 
     private fun Int.toDp(): Int =
         (this / Resources.getSystem().displayMetrics.density).toInt()

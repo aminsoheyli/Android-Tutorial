@@ -52,9 +52,9 @@ class TaskListActivity : BaseActivity() {
         val addTaskList = Task(resources.getString(R.string.add_list))
         boardDetails.taskList.add(addTaskList)
         binding.rvTaskList.layoutManager =
-            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvTaskList.setHasFixedSize(true)
-        val adapter = TaskItemsAdapter(this@TaskListActivity, boardDetails.taskList)
+        val adapter = TaskItemsAdapter(this, boardDetails.taskList)
         binding.rvTaskList.adapter = adapter
     }
 
@@ -70,6 +70,21 @@ class TaskListActivity : BaseActivity() {
         boardDetails.taskList.add(0, task)
         boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
         showProgressDialog(resources.getString(R.string.please_wait))
-        Firestore().addUpdateTaskList(this@TaskListActivity, boardDetails)
+        Firestore().addUpdateTaskList(this, boardDetails)
+    }
+
+    fun updateTaskList(position: Int, listName: String, model: Task) {
+        val task = Task(listName, model.createdBy)
+        boardDetails.taskList[position] = task
+        boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
+        showProgressDialog(resources.getString(R.string.please_wait))
+        Firestore().addUpdateTaskList(this, boardDetails)
+    }
+
+    fun deleteTaskList(position: Int) {
+        boardDetails.taskList.removeAt(position)
+        boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
+        showProgressDialog(resources.getString(R.string.please_wait))
+        Firestore().addUpdateTaskList(this, boardDetails)
     }
 }
