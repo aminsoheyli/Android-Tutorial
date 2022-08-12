@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aminsoheyli.trelloclone.activities.TaskListActivity
 import com.aminsoheyli.trelloclone.databinding.ItemTaskBinding
@@ -80,6 +81,25 @@ open class TaskItemsAdapter(
                     model.title
                 )
             }
+            binding.tvAddCard.setOnClickListener {
+                binding.tvAddCard.visibility = View.GONE
+                binding.cvAddCard.visibility = View.VISIBLE
+            }
+            binding.ibCloseCardName.setOnClickListener {
+                binding.tvAddCard.visibility = View.VISIBLE
+                binding.cvAddCard.visibility = View.GONE
+            }
+            binding.ibDoneCardName.setOnClickListener {
+                val cardName = binding.etCardName.text.toString()
+                if (cardName.isEmpty())
+                    Toast.makeText(context, "Please Enter a Card Name.", Toast.LENGTH_SHORT).show()
+                else if (context is TaskListActivity)
+                    context.addCardToTaskList(cardName, position)
+            }
+            binding.rvCardList.layoutManager = LinearLayoutManager(context)
+            binding.rvCardList.setHasFixedSize(true)
+            val adapter = CardItemsAdapter(context, model.cards)
+            binding.rvCardList.adapter = adapter
         }
     }
 

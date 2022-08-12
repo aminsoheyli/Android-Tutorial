@@ -8,6 +8,7 @@ import com.aminsoheyli.trelloclone.adapters.TaskItemsAdapter
 import com.aminsoheyli.trelloclone.databinding.ActivityTaskListBinding
 import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.Board
+import com.aminsoheyli.trelloclone.models.Card
 import com.aminsoheyli.trelloclone.models.Task
 import com.aminsoheyli.trelloclone.utils.Constants
 
@@ -86,5 +87,22 @@ class TaskListActivity : BaseActivity() {
         boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
         showProgressDialog(resources.getString(R.string.please_wait))
         Firestore().addUpdateTaskList(this, boardDetails)
+    }
+
+    fun addCardToTaskList(cardName: String, position:Int) {
+        boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
+        val cardAssignedUsersList: ArrayList<String> = ArrayList()
+        cardAssignedUsersList.add(Firestore().getCurrentUserID())
+        val card = Card(cardName, Firestore().getCurrentUserID(), cardAssignedUsersList)
+        val cardsList = boardDetails.taskList[position].cards
+        cardsList.add(card)
+        val task = Task(
+            boardDetails.taskList[position].title,
+            boardDetails.taskList[position].createdBy,
+            cardsList
+        )
+        boardDetails.taskList[position] = task
+        showProgressDialog(resources.getString(R.string.please_wait))
+        Firestore().addUpdateTaskList(this@TaskListActivity, boardDetails)
     }
 }
