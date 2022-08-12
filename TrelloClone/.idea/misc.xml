@@ -17,6 +17,7 @@
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_create_board.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_intro.xml" value="0.20092592592592592" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_members.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_my_profile.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_profile.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/activity_sign_in.xml" value="0.2203125" />
@@ -33,6 +34,7 @@
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/nav_header_main.xml" value="0.2846153846153846" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/layout/test.xml" value="0.234375" />
         <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/menu/activity_main_drawer.xml" value="0.34791666666666665" />
+        <entry key="..\:/Users/Amin/AndroidStudioProjects/Android-Oreo-Tutorial/TrelloClone/app/src/main/res/menu/menu_members.xml" value="0.34791666666666665" />
       </map>
     </option>
   </component>

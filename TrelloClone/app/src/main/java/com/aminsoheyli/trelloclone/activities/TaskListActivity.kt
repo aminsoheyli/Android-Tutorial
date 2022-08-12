@@ -1,7 +1,10 @@
 package com.aminsoheyli.trelloclone.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.adapters.TaskItemsAdapter
@@ -89,7 +92,7 @@ class TaskListActivity : BaseActivity() {
         Firestore().addUpdateTaskList(this, boardDetails)
     }
 
-    fun addCardToTaskList(cardName: String, position:Int) {
+    fun addCardToTaskList(cardName: String, position: Int) {
         boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
         val cardAssignedUsersList: ArrayList<String> = ArrayList()
         cardAssignedUsersList.add(Firestore().getCurrentUserID())
@@ -104,5 +107,17 @@ class TaskListActivity : BaseActivity() {
         boardDetails.taskList[position] = task
         showProgressDialog(resources.getString(R.string.please_wait))
         Firestore().addUpdateTaskList(this@TaskListActivity, boardDetails)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_members, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_members -> startActivity(Intent(this, MembersActivity::class.java))
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

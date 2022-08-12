@@ -13,6 +13,7 @@ object Constants {
     const val ASSIGNED_TO = "assignedTo"
     const val DOCUMENT_ID = "documentId"
     const val TASK_LIST = "taskList"
+    const val BOARD_DETAIL = "board_detail"
 
     const val IMAGE = "image"
     const val NAME = "name"
