@@ -122,16 +122,23 @@ class TaskListActivity : BaseActivity() {
         )
         boardDetails.taskList[position] = task
         showProgressDialog(resources.getString(R.string.please_wait))
-        Firestore().addUpdateTaskList(this@TaskListActivity, boardDetails)
+        Firestore().addUpdateTaskList(this, boardDetails)
     }
 
     fun cardDetails(taskListPosition: Int, cardPosition: Int) {
-        val intent = Intent(this@TaskListActivity, CardDetailsActivity::class.java)
+        val intent = Intent(this, CardDetailsActivity::class.java)
         intent.putExtra(Constants.BOARD_DETAIL, boardDetails)
         intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
         intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
         intent.putExtra(Constants.BOARD_MEMBERS_LIST, assignedMembersDetailList)
         startActivityForResult(intent, CARD_DETAILS_REQUEST_CODE)
+    }
+
+    fun updateCardsInTaskList(taskListPosition: Int, cards: ArrayList<Card>) {
+        boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
+        boardDetails.taskList[taskListPosition].cards = cards
+        showProgressDialog(resources.getString(R.string.please_wait))
+        Firestore().addUpdateTaskList(this, boardDetails)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
