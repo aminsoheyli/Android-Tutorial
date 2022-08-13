@@ -29,19 +29,17 @@ open class CardItemsAdapter(
         val position = holder.adapterPosition
         val model = list[position]
 
-
         if (model.labelColor.isNotEmpty()) {
             holder.binding.viewLabelColor.visibility = View.VISIBLE
             holder.binding.viewLabelColor.setBackgroundColor(Color.parseColor(model.labelColor))
-        } else {
+        } else
             holder.binding.viewLabelColor.visibility = View.GONE
-        }
 
         holder.binding.tvCardName.text = model.name
         if ((context as TaskListActivity).assignedMembersDetailList.size > 0) {
             val selectedMembersList: ArrayList<SelectedMembers> = ArrayList()
-            for (i in context.assignedMembersDetailList.indices) {
-                for (j in model.assignedTo) {
+            for (i in context.assignedMembersDetailList.indices)
+                for (j in model.assignedTo)
                     if (context.assignedMembersDetailList[i].id == j) {
                         val selectedMember = SelectedMembers(
                             context.assignedMembersDetailList[i].id,
@@ -49,14 +47,12 @@ open class CardItemsAdapter(
                         )
                         selectedMembersList.add(selectedMember)
                     }
-                }
-            }
-            if (selectedMembersList.size > 0) {
-                if (selectedMembersList.size == 1 && selectedMembersList[0].id == model.createdBy) {
-                    holder.binding.rvCardSelectedMembersList.visibility = View.GONE
-                } else {
-                    holder.binding.rvCardSelectedMembersList.visibility = View.VISIBLE
 
+            if (selectedMembersList.size > 0) {
+                if (selectedMembersList.size == 1 && selectedMembersList[0].id == model.createdBy)
+                    holder.binding.rvCardSelectedMembersList.visibility = View.GONE
+                else {
+                    holder.binding.rvCardSelectedMembersList.visibility = View.VISIBLE
                     holder.binding.rvCardSelectedMembersList.layoutManager =
                         GridLayoutManager(context, 4)
                     val adapter = CardMemberItemsAdapter(context, selectedMembersList, false)
@@ -68,9 +64,8 @@ open class CardItemsAdapter(
                         }
                     })
                 }
-            } else {
+            } else
                 holder.binding.rvCardSelectedMembersList.visibility = View.GONE
-            }
         }
         holder.itemView.setOnClickListener {
             if (this@CardItemsAdapter::onClickListener.isInitialized)

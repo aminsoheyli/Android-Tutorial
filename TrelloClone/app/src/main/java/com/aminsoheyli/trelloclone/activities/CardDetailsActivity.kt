@@ -1,6 +1,7 @@
 package com.aminsoheyli.trelloclone.activities
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
@@ -17,12 +18,16 @@ import com.aminsoheyli.trelloclone.dialogs.MembersListDialog
 import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.*
 import com.aminsoheyli.trelloclone.utils.Constants
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CardDetailsActivity : BaseActivity() {
     private lateinit var boardDetails: Board
     private var taskListPosition: Int = -1
     private var cardPosition: Int = -1
     private var selectedColor: String = ""
+    private var selectedDueDateMilliSeconds: Long = 0
     private lateinit var membersDetailList: ArrayList<User>
     private lateinit var binding: ActivityCardDetailsBinding
 
@@ -35,10 +40,16 @@ class CardDetailsActivity : BaseActivity() {
         binding.etNameCardDetails.setText(boardDetails.taskList[taskListPosition].cards[cardPosition].name)
         binding.etNameCardDetails.setSelection(binding.etNameCardDetails.text.toString().length)
         selectedColor = boardDetails.taskList[taskListPosition].cards[cardPosition].labelColor
+        selectedDueDateMilliSeconds =
+            boardDetails.taskList[taskListPosition].cards[cardPosition].dueDate
+        if(selectedDueDateMilliSeconds > 0){
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+            val selectedDate = simpleDateFormat.format(Date(selectedDueDateMilliSeconds))
+            binding.tvSelectDueDate.text = selectedDate
+        }
         if (selectedColor.isNotEmpty())
             setColor()
         binding.tvSelectLabelColor.setOnClickListener { labelColorsListDialog() }
-        setupSelectedMembersList()
         binding.tvSelectMembers.setOnClickListener { membersListDialog() }
         binding.btnUpdateCardDetails.setOnClickListener {
             if (binding.etNameCardDetails.text.toString().isNotEmpty())
@@ -46,8 +57,11 @@ class CardDetailsActivity : BaseActivity() {
             else
                 Toast.makeText(this@CardDetailsActivity, "Enter card name.", Toast.LENGTH_SHORT)
                     .show()
-
         }
+        binding.tvSelectDueDate.setOnClickListener {
+            showDataPicker()
+        }
+        setupSelectedMembersList()
     }
 
     private fun setupActionBar() {
@@ -120,7 +134,8 @@ class CardDetailsActivity : BaseActivity() {
             binding.etNameCardDetails.text.toString(),
             boardDetails.taskList[taskListPosition].cards[cardPosition].createdBy,
             boardDetails.taskList[taskListPosition].cards[cardPosition].assignedTo,
-            selectedColor
+            selectedColor,
+            selectedDueDateMilliSeconds
         )
         val taskList: ArrayList<Task> = boardDetails.taskList
         taskList.removeAt(taskList.size - 1)
@@ -241,5 +256,28 @@ class CardDetailsActivity : BaseActivity() {
                 rvSelectedMembersList.visibility = View.GONE
             }
         }
+    }
+
+    private fun showDataPicker() {
+        val c = Calendar.getInstance()
+        val year =
+            c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        val dpd = DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                val sDayOfMonth = if (dayOfMonth < 10) "0$dayOfMonth" else "$dayOfMonth"
+                val sMonthOfYear =
+                    if ((monthOfYear + 1) < 10) "0${monthOfYear + 1}" else "${monthOfYear + 1}"
+                val selectedDate = "$sDayOfMonth/$sMonthOfYear/$year"
+                binding.tvSelectDueDate.text = selectedDate
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+                val theDate = sdf.parse(selectedDate)
+                selectedDueDateMilliSeconds = theDate!!.time
+            }, year, month, day
+        )
+        dpd.show()
     }
 }
