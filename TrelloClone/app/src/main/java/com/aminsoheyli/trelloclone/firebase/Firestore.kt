@@ -99,7 +99,7 @@ class Firestore {
                 Log.e(activity.javaClass.simpleName, "TaskList updated successfully.")
                 if (activity is TaskListActivity)
                     activity.addUpdateTaskListSuccess()
-                else if(activity is CardDetailsActivity)
+                else if (activity is CardDetailsActivity)
                     activity.addUpdateTaskListSuccess()
             }.addOnFailureListener { e ->
                 activity.hideProgressDialog()
@@ -122,7 +122,7 @@ class Firestore {
             }
     }
 
-    fun getAssignedMembersListDetails(activity: MembersActivity, assignedTo: ArrayList<String>) {
+    fun getAssignedMembersListDetails(activity: BaseActivity, assignedTo: ArrayList<String>) {
         firestore.collection(Constants.USERS)
             .whereIn(Constants.ID, assignedTo)
             .get()
@@ -133,7 +133,10 @@ class Firestore {
                     val user = i.toObject(User::class.java)!!
                     usersList.add(user)
                 }
-                activity.setupMembersList(usersList)
+                if (activity is MembersActivity)
+                    activity.setupMembersList(usersList)
+                else if (activity is TaskListActivity)
+                    activity.boardMembersDetailList(usersList)
             }
             .addOnFailureListener { e ->
                 activity.hideProgressDialog()

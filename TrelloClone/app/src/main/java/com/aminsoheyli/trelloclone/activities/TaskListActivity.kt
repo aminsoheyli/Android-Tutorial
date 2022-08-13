@@ -14,6 +14,7 @@ import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.Board
 import com.aminsoheyli.trelloclone.models.Card
 import com.aminsoheyli.trelloclone.models.Task
+import com.aminsoheyli.trelloclone.models.User
 import com.aminsoheyli.trelloclone.utils.Constants
 
 class TaskListActivity : BaseActivity() {
@@ -24,6 +25,7 @@ class TaskListActivity : BaseActivity() {
 
     private lateinit var boardDetails: Board
     private lateinit var boardDocumentId: String
+    private lateinit var assignedMembersDetailList: ArrayList<User>
     private lateinit var binding: ActivityTaskListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +68,13 @@ class TaskListActivity : BaseActivity() {
         binding.rvTaskList.setHasFixedSize(true)
         val adapter = TaskItemsAdapter(this, boardDetails.taskList)
         binding.rvTaskList.adapter = adapter
+        showProgressDialog()
+        Firestore().getAssignedMembersListDetails(this, boardDetails.assignedTo)
+    }
+
+    fun boardMembersDetailList(list: ArrayList<User>) {
+        assignedMembersDetailList = list
+        hideProgressDialog()
     }
 
     fun addUpdateTaskListSuccess() {
@@ -120,7 +129,7 @@ class TaskListActivity : BaseActivity() {
         intent.putExtra(Constants.BOARD_DETAIL, boardDetails)
         intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
         intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
-//        intent.putExtra(Constants.BOARD_MEMBERS_LIST, mAssignedMembersDetailList)
+        intent.putExtra(Constants.BOARD_MEMBERS_LIST, assignedMembersDetailList)
         startActivityForResult(intent, CARD_DETAILS_REQUEST_CODE)
     }
 
