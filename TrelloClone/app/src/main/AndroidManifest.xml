@@ -20,7 +20,7 @@
         <activity
             android:name=".activities.MembersActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.NoActionBar"
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".activities.TaskListActivity"
