@@ -95,6 +95,7 @@ class TaskListActivity : BaseActivity() {
 
     fun updateTaskList(position: Int, listName: String, model: Task) {
         val task = Task(listName, model.createdBy)
+        task.cards = model.cards
         boardDetails.taskList[position] = task
         boardDetails.taskList.removeAt(boardDetails.taskList.size - 1)
         showProgressDialog(resources.getString(R.string.please_wait))
