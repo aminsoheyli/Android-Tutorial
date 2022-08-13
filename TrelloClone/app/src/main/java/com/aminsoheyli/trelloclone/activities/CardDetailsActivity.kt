@@ -1,6 +1,7 @@
 package com.aminsoheyli.trelloclone.activities
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.aminsoheyli.trelloclone.R
 import com.aminsoheyli.trelloclone.databinding.ActivityCardDetailsBinding
+import com.aminsoheyli.trelloclone.dialogs.LabelColorListDialog
 import com.aminsoheyli.trelloclone.firebase.Firestore
 import com.aminsoheyli.trelloclone.models.Board
 import com.aminsoheyli.trelloclone.models.Card
@@ -33,6 +35,12 @@ class CardDetailsActivity : BaseActivity() {
         setupActionBar()
         binding.etNameCardDetails.setText(boardDetails.taskList[taskListPosition].cards[cardPosition].name)
         binding.etNameCardDetails.setSelection(binding.etNameCardDetails.text.toString().length)
+        selectedColor = boardDetails.taskList[taskListPosition].cards[cardPosition].labelColor
+        if (selectedColor.isNotEmpty())
+            setColor()
+        binding.tvSelectLabelColor.setOnClickListener { labelColorsListDialog() }
+//        setupSelectedMembersList()
+//        binding.tvSelectMembers.setOnClickListener { membersListDialog() }
         binding.btnUpdateCardDetails.setOnClickListener {
             if (binding.etNameCardDetails.text.toString().isNotEmpty())
                 updateCardDetails()
@@ -132,4 +140,109 @@ class CardDetailsActivity : BaseActivity() {
         showProgressDialog()
         Firestore().addUpdateTaskList(this, boardDetails)
     }
+
+    private fun setColor() {
+        binding.tvSelectLabelColor.text = ""
+        binding.tvSelectLabelColor.setBackgroundColor(Color.parseColor(selectedColor))
+    }
+
+    private fun colorsList(): ArrayList<String> {
+        val colorsList: ArrayList<String> = ArrayList()
+        colorsList.add("#43C86F")
+        colorsList.add("#0C90F1")
+        colorsList.add("#F72400")
+        colorsList.add("#7A8089")
+        colorsList.add("#D57C1D")
+        colorsList.add("#770000")
+        colorsList.add("#0022F8")
+        return colorsList
+    }
+
+    private fun labelColorsListDialog() {
+        val colorsList: ArrayList<String> = colorsList()
+        val listDialog = object : LabelColorListDialog(
+            this, colorsList, resources.getString(R.string.str_select_label_color), selectedColor
+        ) {
+            override fun onItemSelected(color: String) {
+                selectedColor = color
+                setColor()
+            }
+        }
+        listDialog.show()
+    }
+//
+//    private fun membersListDialog() {
+//        val cardAssignedMembersList =
+//            boardDetails.taskList[taskListPosition].cards[cardPosition].assignedTo
+//        if (cardAssignedMembersList.size > 0)
+//            for (i in membersDetailList.indices)
+//                for (j in cardAssignedMembersList) {
+//                    if (membersDetailList[i].id == j) {
+//                        membersDetailList[i].selected = true
+//                    }
+//                }
+//        else for (i in membersDetailList.indices)
+//            membersDetailList[i].selected = false
+//
+//        val listDialog = object : MembersListDialog(
+//            this, membersDetailList, resources.getString(R.string.str_select_member)
+//        ) {
+//            override fun onItemSelected(user: User, action: String) {
+//                if (action == Constants.SELECT) {
+//                    if (!boardDetails.taskList[taskListPosition].cards[cardPosition].assignedTo.contains(
+//                            user.id
+//                        )
+//                    ) {
+//                        boardDetails.taskList[taskListPosition].cards[cardPosition].assignedTo.add(
+//                            user.id
+//                        )
+//                    }
+//                } else {
+//                    boardDetails.taskList[taskListPosition].cards[cardPosition].assignedTo.remove(
+//                        user.id
+//                    )
+//
+//                    for (i in membersDetailList.indices) {
+//                        if (membersDetailList[i].id == user.id) {
+//                            membersDetailList[i].selected = false
+//                        }
+//                    }
+//                }
+//                setupSelectedMembersList()
+//            }
+//        }
+//        listDialog.show()
+//    }
+//
+//    private fun setupSelectedMembersList() {
+//        val cardAssignedMembersList =
+//            boardDetails.taskList[taskListPosition].cards[cardPosition].assignedTo
+//        val selectedMembersList: ArrayList<SelectedMembers> = ArrayList()
+//        for (i in membersDetailList.indices)
+//            for (j in cardAssignedMembersList)
+//                if (membersDetailList[i].id == j) {
+//                    val selectedMember = SelectedMembers(
+//                        membersDetailList[i].id,
+//                        membersDetailList[i].image
+//                    )
+//                    selectedMembersList.add(selectedMember)
+//                }
+//        if (selectedMembersList.size > 0) {
+//            selectedMembersList.add(SelectedMembers("", ""))
+//            tv_select_members.visibility = View.GONE
+//            rv_selected_members_list.visibility = View.VISIBLE
+//            rv_selected_members_list.layoutManager = GridLayoutManager(this@CardDetailsActivity, 6)
+//            val adapter = CardMemberListItemsAdapter(this@CardDetailsActivity, selectedMembersList)
+//            rv_selected_members_list.adapter = adapter
+//            adapter.setOnClickListener(object :
+//                CardMemberListItemsAdapter.OnClickListener {
+//                override fun onClick() {
+//                    membersListDialog()
+//                }
+//            })
+//        } else {
+//            tv_select_members.visibility = View.VISIBLE
+//            rv_selected_members_list.visibility = View.GONE
+//        }
+//    }
 }
