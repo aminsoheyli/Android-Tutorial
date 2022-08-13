@@ -18,8 +18,8 @@ import com.aminsoheyli.trelloclone.utils.Constants
 
 class TaskListActivity : BaseActivity() {
     companion object {
-        const val MEMBERS_REQUEST_CODE: Int = 13
-        const val CARD_DETAILS_REQUEST_CODE: Int = 14
+        const val MEMBERS_REQUEST_CODE: Int = 1
+        const val CARD_DETAILS_REQUEST_CODE: Int = 2
     }
 
     private lateinit var boardDetails: Board
