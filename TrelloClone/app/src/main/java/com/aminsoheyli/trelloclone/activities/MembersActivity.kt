@@ -1,5 +1,6 @@
 package com.aminsoheyli.trelloclone.activities
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,6 +18,7 @@ import com.aminsoheyli.trelloclone.utils.Constants
 class MembersActivity : BaseActivity() {
     private lateinit var boardDetails: Board
     private lateinit var assignedMemberList: ArrayList<User>
+    private var anyChangesMade = false
     private lateinit var binding: ActivityMembersBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +102,13 @@ class MembersActivity : BaseActivity() {
     fun memberAssignSuccess(user: User) {
         hideProgressDialog()
         assignedMemberList.add(user)
+        anyChangesMade = true
         setupMembersList(assignedMemberList)
+    }
+
+    override fun onBackPressed() {
+        if(anyChangesMade)
+            setResult(Activity.RESULT_OK)
+        super.onBackPressed()
     }
 }

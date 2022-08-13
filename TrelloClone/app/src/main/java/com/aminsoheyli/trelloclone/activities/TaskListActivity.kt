@@ -1,5 +1,6 @@
 package com.aminsoheyli.trelloclone.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +17,13 @@ import com.aminsoheyli.trelloclone.models.Task
 import com.aminsoheyli.trelloclone.utils.Constants
 
 class TaskListActivity : BaseActivity() {
+    companion object {
+        const val MEMBERS_REQUEST_CODE: Int = 13
+        const val CARD_DETAILS_REQUEST_CODE: Int = 14
+    }
+
     private lateinit var boardDetails: Board
+    private lateinit var boardDocumentId: String
     private lateinit var binding: ActivityTaskListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,12 +36,11 @@ class TaskListActivity : BaseActivity() {
 
     private fun initUi() {
         showProgressDialog()
+        if (intent.hasExtra(Constants.DOCUMENT_ID))
+            boardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID)!!
     }
 
     private fun setupFirebase() {
-        var boardDocumentId = ""
-        if (intent.hasExtra(Constants.DOCUMENT_ID))
-            boardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID)!!
         Firestore().getBoardDetails(this, boardDocumentId)
     }
 
@@ -120,9 +126,21 @@ class TaskListActivity : BaseActivity() {
             R.id.action_members -> {
                 val intent = Intent(this, MembersActivity::class.java)
                 intent.putExtra(Constants.BOARD_DETAIL, boardDetails)
-                startActivity(intent)
+                startActivityForResult(intent, MEMBERS_REQUEST_CODE)
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK
+            && (requestCode == MEMBERS_REQUEST_CODE || requestCode == CARD_DETAILS_REQUEST_CODE)
+        ) {
+            showProgressDialog(resources.getString(R.string.please_wait))
+            Firestore().getBoardDetails(this@TaskListActivity, boardDocumentId)
+        } else
+            Log.e("Cancelled", "Cancelled")
     }
 }
