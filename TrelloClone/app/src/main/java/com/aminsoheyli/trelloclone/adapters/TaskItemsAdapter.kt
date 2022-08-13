@@ -100,6 +100,12 @@ open class TaskItemsAdapter(
             binding.rvCardList.setHasFixedSize(true)
             val adapter = CardItemsAdapter(context, model.cards)
             binding.rvCardList.adapter = adapter
+            adapter.setOnClickListener(object : CardItemsAdapter.OnClickListener {
+                override fun onClick(cardPosition: Int) {
+                    if (context is TaskListActivity)
+                        context.cardDetails(position, cardPosition)
+                }
+            })
         }
     }
 

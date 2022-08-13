@@ -7,7 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aminsoheyli.trelloclone.R
-import com.aminsoheyli.trelloclone.adapters.MemberListItemsAdapter
+import com.aminsoheyli.trelloclone.adapters.MemberItemsAdapter
 import com.aminsoheyli.trelloclone.databinding.ActivityMembersBinding
 import com.aminsoheyli.trelloclone.databinding.DialogSearchMemberBinding
 import com.aminsoheyli.trelloclone.firebase.Firestore
@@ -57,7 +57,7 @@ class MembersActivity : BaseActivity() {
         hideProgressDialog()
         binding.rvMembersList.layoutManager = LinearLayoutManager(this)
         binding.rvMembersList.setHasFixedSize(true)
-        val adapter = MemberListItemsAdapter(this, list)
+        val adapter = MemberItemsAdapter(this, list)
         binding.rvMembersList.adapter = adapter
     }
 

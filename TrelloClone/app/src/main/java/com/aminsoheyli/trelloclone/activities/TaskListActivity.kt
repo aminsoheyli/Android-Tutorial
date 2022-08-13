@@ -115,6 +115,15 @@ class TaskListActivity : BaseActivity() {
         Firestore().addUpdateTaskList(this@TaskListActivity, boardDetails)
     }
 
+    fun cardDetails(taskListPosition: Int, cardPosition: Int) {
+        val intent = Intent(this@TaskListActivity, CardDetailsActivity::class.java)
+        intent.putExtra(Constants.BOARD_DETAIL, boardDetails)
+        intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
+        intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
+//        intent.putExtra(Constants.BOARD_MEMBERS_LIST, mAssignedMembersDetailList)
+        startActivityForResult(intent, CARD_DETAILS_REQUEST_CODE)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_members, menu)
         return super.onCreateOptionsMenu(menu)
@@ -122,7 +131,6 @@ class TaskListActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-
             R.id.action_members -> {
                 val intent = Intent(this, MembersActivity::class.java)
                 intent.putExtra(Constants.BOARD_DETAIL, boardDetails)

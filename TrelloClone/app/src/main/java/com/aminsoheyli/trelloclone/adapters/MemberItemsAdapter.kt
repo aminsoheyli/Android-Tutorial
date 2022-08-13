@@ -9,10 +9,10 @@ import com.aminsoheyli.trelloclone.databinding.ItemMemberBinding
 import com.aminsoheyli.trelloclone.models.User
 import com.bumptech.glide.Glide
 
-open class MemberListItemsAdapter(
+open class MemberItemsAdapter(
     private val context: Context,
     private var list: ArrayList<User>
-) : RecyclerView.Adapter<MemberListItemsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MemberItemsAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemMemberBinding) : RecyclerView.ViewHolder(binding.root)
 

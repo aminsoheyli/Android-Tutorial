@@ -23,6 +23,10 @@ open class CardItemsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = list[position]
         holder.binding.tvCardName.text = model.name
+        holder.itemView.setOnClickListener {
+            if(onClickListener != null)
+                onClickListener!!.onClick(position)
+        }
     }
 
     override fun getItemCount(): Int = list.size
@@ -32,6 +36,6 @@ open class CardItemsAdapter(
     }
 
     interface OnClickListener {
-        fun onClick(position: Int, card: Card)
+        fun onClick(cardPosition: Int)
     }
 }
