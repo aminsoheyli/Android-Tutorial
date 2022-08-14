@@ -57,8 +57,16 @@ fun MyApp() {
             CreateCircle {
                 moneyCounter += 1
             }
-            if (moneyCounter > 25)
-                Text("Lots of money!")
+            if (moneyCounter >=10)
+                Text(
+                    text = "Lots of money!",
+                    modifier = Modifier.padding(top = 20.dp),
+                    style = TextStyle(
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                )
         }
     }
 }
@@ -76,7 +84,7 @@ fun CreateCircle(updateMoneyCounter: () -> Unit) {
         elevation = 4.dp
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Text(text = "Tap", modifier = Modifier)
+            Text(text = "Tap", style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
         }
     }
 }
