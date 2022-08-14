@@ -61,7 +61,7 @@
             android:name=".activities.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.MaterialComponents.NoActionBar" />
         <activity
             android:name=".activities.BaseActivity"
             android:exported="false" />
