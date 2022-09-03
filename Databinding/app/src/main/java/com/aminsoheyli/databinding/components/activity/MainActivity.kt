@@ -1,6 +1,5 @@
-package com.aminsoheyli.databinding
+package com.aminsoheyli.databinding.components.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -19,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private fun initUi() {
         // View-Binding use-case
         binding.editTextName.addTextChangedListener { watcher ->
-            binding.textViewBindingMessage.text = watcher.toString()
+            binding.textViewBindingMessage.text = watcher.toString().trim()
         }
     }
 }
