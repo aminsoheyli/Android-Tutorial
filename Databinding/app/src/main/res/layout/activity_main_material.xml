@@ -9,15 +9,10 @@
         android:padding="16dp"
         tools:context=".components.activity.MainActivity">
 
-        <!--    Task 1: Add a new TextView for view-binding   -->
-        <!--    Task 2: Add a new TextView for data-binding   -->
-        <!--    ToDo Task 3: Use material-design component version 2 based on docs   -->
-        <!--    ToDo Task 3A: Button - TextView - EditText   -->
-        <!--    ToDo Task 4: Use material-design component version 3 based on docs  -->
 
-
-        <EditText
-            android:id="@+id/edit_text_name"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Your Name"
@@ -26,7 +21,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="John" />
+            tools:text="John">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/text_view1"
@@ -38,7 +40,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_text_name" />
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
 
         <TextView
             android:id="@+id/text_view_binding_message"

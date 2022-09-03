@@ -4,13 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.aminsoheyli.databinding.databinding.ActivityMainBinding
+import com.aminsoheyli.databinding.databinding.ActivityMainMaterialBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainMaterialBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // View-Binding initialization
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainMaterialBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUi()
     }
