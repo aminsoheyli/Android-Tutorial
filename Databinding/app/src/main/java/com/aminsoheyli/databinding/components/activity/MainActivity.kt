@@ -3,6 +3,8 @@ package com.aminsoheyli.databinding.components.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.databinding.DataBindingUtil
+import com.aminsoheyli.databinding.R
 import com.aminsoheyli.databinding.databinding.ActivityMainBinding
 import com.aminsoheyli.databinding.databinding.ActivityMainMaterialBinding
 

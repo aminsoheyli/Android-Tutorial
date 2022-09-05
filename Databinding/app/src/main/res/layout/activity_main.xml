@@ -11,8 +11,8 @@
 
         <!--    Task 1: Add a new TextView for view-binding   -->
         <!--    Task 2: Add a new TextView for data-binding   -->
-        <!--    ToDo Task 3: Use material-design component version 2 based on docs   -->
-        <!--    ToDo Task 3A: Button - TextView - EditText   -->
+        <!--    Task 3A: Use material-design component version 2 based on docs   -->
+        <!--    Task 3B: Button - TextView - EditText   -->
         <!--    ToDo Task 4: Use material-design component version 3 based on docs  -->
 
 
@@ -34,8 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="View-binding works by java code(manually):"
-            android:textAllCaps="false"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_text_name" />

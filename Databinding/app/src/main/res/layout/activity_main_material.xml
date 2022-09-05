@@ -31,25 +31,21 @@
 
         <TextView
             android:id="@+id/text_view1"
+            style="@style/TextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="View-binding works by java code(manually):"
-            android:textAllCaps="false"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
 
         <TextView
             android:id="@+id/text_view_binding_message"
+            style="@style/TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view1"
@@ -58,30 +54,24 @@
 
         <TextView
             android:id="@+id/textView2"
+            style="@style/TextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:gravity="center"
             android:text="Data-binding works by xml code(auto):"
-            android:textAllCaps="false"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_binding_message" />
 
         <TextView
             android:id="@+id/text_data_binding_message"
+            style="@style/TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="@{editTextName.text.toString().trim()}"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:text="@{editTextName.text.toString().trim(), default=John}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:text="John" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
